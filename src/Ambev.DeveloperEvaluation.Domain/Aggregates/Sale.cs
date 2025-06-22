@@ -1,5 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Common;
-using Ambev.DeveloperEvaluation.Domain.Enums;
+﻿using Ambev.DeveloperEvaluation.Domain.Enums;
+using Ambev.DeveloperEvaluation.Domain.Events;
 
 namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 {
@@ -57,10 +57,9 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
             AddDomainEvent(new SaleCancelledEvent(Id, reason));
         }
 
-        public void CancelItem(int saleItemId, string reason)
+        public void CancelItem(Guid saleItemId, string reason)
         {
-            var item = SaleItems.FirstOrDefault(i => i.Id == saleItemId);
-            if (item == null) throw new InvalidOperationException("Item not found");
+            var item = SaleItems.FirstOrDefault(i => i.Id == saleItemId) ?? throw new InvalidOperationException("Item not found");
 
             item.Cancel(reason);
             RecalculateTotal();
