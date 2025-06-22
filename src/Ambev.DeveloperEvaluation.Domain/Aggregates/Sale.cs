@@ -7,19 +7,18 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
     {
         public string SaleNumber { get; set; } = string.Empty;
         public DateTime SaleDate { get; set; }
-        public int CustomerId { get; set; }
-        public string CustomerName { get; set; } = string.Empty; // Denormalizado
+        public Guid CustomerId { get; set; }
+        public string CustomerName { get; set; } = string.Empty;
         public int BranchId { get; set; }
-        public string BranchName { get; set; } = string.Empty; // Denormalizado
+        public string BranchName { get; set; } = string.Empty;
         public decimal TotalAmount { get; set; }
         public SaleStatus Status { get; set; } = SaleStatus.Active;
         public string? CancelationReason { get; set; }
         public DateTime? CancelationDate { get; set; }
 
-        // Navigation properties
         public virtual ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
 
-        public void AddItem(int productId, string productName, int quantity, decimal unitPrice)
+        public void AddItem(Guid productId, string productName, int quantity, decimal unitPrice)
         {
             ValidateQuantity(quantity);
 
@@ -67,7 +66,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
             AddDomainEvent(new ItemCancelledEvent(Id, saleItemId, item.ProductName, item.Quantity));
         }
 
-        private void ValidateQuantity(int quantity)
+        private static void ValidateQuantity(int quantity)
         {
             if (quantity > 20)
                 throw new DomainException("Cannot sell more than 20 identical items");
@@ -75,7 +74,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
                 throw new DomainException("Quantity must be greater than zero");
         }
 
-        private decimal CalculateDiscount(int quantity)
+        private static decimal CalculateDiscount(int quantity)
         {
             return quantity switch
             {
