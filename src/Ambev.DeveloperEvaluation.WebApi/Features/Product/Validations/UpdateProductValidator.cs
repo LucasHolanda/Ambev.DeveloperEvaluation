@@ -1,8 +1,9 @@
+using Ambev.DeveloperEvaluation.Application.Products.UpdateProduct;
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Product.Validations
 {
-    public class UpdateProductValidator : AbstractValidator<ProductDto>
+    public class UpdateProductValidator : AbstractValidator<UpdateProductCommand>
     {
         public UpdateProductValidator()
         {
@@ -14,7 +15,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Product.Validations
             RuleFor(x => x.Title).NotEmpty()
                 .WithMessage("Title is required.")
                 .MaximumLength(500).WithMessage("Title must not exceed 500 characters.");
-            
+
             RuleFor(x => x.Price).GreaterThan(0)
                 .WithMessage("Price must be greater than 0.")
                 .PrecisionScale(18, 2, true).WithMessage("Price must have a maximum of 18 digits and 2 decimal places.");

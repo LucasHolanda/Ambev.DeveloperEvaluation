@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
 {
-    public class CreateProductHandler : IRequestHandler<CreateProductCommand, ProductResult>
+    public class CreateProductHandler : IRequestHandler<CreateProductCommand, ProductDto>
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
@@ -19,7 +19,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
             _mapper = mapper;
         }
 
-        public async Task<ProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+        public async Task<ProductDto> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
             var existingProduct = await _productRepository.GetByTitleAndCategoryAsync(command.Title, command.Category, cancellationToken);
             if (existingProduct.Any())
@@ -27,8 +27,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
 
             var product = _mapper.Map<Product>(command);
             await _productRepository.AddAsync(product, cancellationToken);
-            var result = _mapper.Map<ProductResult>(product);
-            return result;
+            return _mapper.Map<ProductDto>(product);
         }
     }
 }

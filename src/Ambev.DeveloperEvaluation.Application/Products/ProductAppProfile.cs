@@ -17,7 +17,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products
 
             CreateMap<QueryParameters, QueryParametersCommand>().ReverseMap();
 
-            CreateMap<Product, ProductResult>()
+            CreateMap<Product, ProductDto>()
                 .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
 
             CreateMap<CreateProductCommand, Product>()
@@ -26,7 +26,9 @@ namespace Ambev.DeveloperEvaluation.Application.Products
             CreateMap<UpdateProductCommand, Product>()
                 .ForMember(dest => dest.Rating, opt => opt.MapFrom(src => src.Rating));
 
-            CreateMap<ProductRatingCommon, ProductRating>().ReverseMap();
+            CreateMap<ProductRatingCommand, ProductRating>().ReverseMap();
+            
+            CreateMap<ProductRatingDto, ProductRating>().ReverseMap();
         }
     }
 }

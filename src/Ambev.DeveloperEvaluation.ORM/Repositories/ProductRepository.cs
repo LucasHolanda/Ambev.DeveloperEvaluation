@@ -6,7 +6,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
 {
     public class ProductRepository : BaseRepository<Product>, IProductRepository
     {
-        public ProductRepository(DbContext context) : base(context) { }  
+        public ProductRepository(DbContext context) : base(context) { }
 
         public async Task<IEnumerable<Product>> GetByCategoryAsync(string category, CancellationToken cancellationToken = default)
         {

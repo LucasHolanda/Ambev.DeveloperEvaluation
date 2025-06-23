@@ -1,8 +1,8 @@
 ﻿namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 {
-    public class GetProductQueryResult
+    public class GetProductQueryDto
     {
         public int TotalCount { get; set; }
-        public List<ProductResult> Products { get; set; } = new();
+        public List<ProductDto> Products { get; set; } = new();
     }
 }

@@ -35,7 +35,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.UpdatedBy)
             .HasMaxLength(100)
             .IsRequired(false);
-        
+
         builder.Property(u => u.Status)
             .HasConversion<string>()
             .HasMaxLength(20);

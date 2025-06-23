@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 {
-    public class GetProductQueryHandler : IRequestHandler<GetProductQueryCommand, GetProductQueryResult>
+    public class GetProductQueryHandler : IRequestHandler<GetProductQueryCommand, GetProductQueryDto>
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
@@ -16,7 +16,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
             _mapper = mapper;
         }
 
-        public async Task<GetProductQueryResult> Handle(GetProductQueryCommand command, CancellationToken cancellationToken)
+        public async Task<GetProductQueryDto> Handle(GetProductQueryCommand command, CancellationToken cancellationToken)
         {
             var query = _mapper.Map<QueryParameters>(command.QueryParameters);
             var products = await _productRepository.GetByQueryParameters(query, cancellationToken);
@@ -28,9 +28,9 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 
             var totalCount = await _productRepository.CountAsync(query, cancellationToken);
 
-            var productsResult = _mapper.Map<List<ProductResult>>(products);
+            var productsResult = _mapper.Map<List<ProductDto>>(products);
 
-            return new GetProductQueryResult
+            return new GetProductQueryDto
             {
                 Products = productsResult,
                 TotalCount = totalCount

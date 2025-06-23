@@ -1,6 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Application.Common;
-
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Product
+﻿namespace Ambev.DeveloperEvaluation.Application.Products
 {
     public class ProductDto
     {
@@ -10,6 +8,12 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Product
         public string Description { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
-        public ProductRatingCommon Rating { get; set; } = new();
+        public ProductRatingDto Rating { get; set; } = new();
+    }
+
+    public class ProductRatingDto
+    {
+        public decimal Rate { get; set; }
+        public int Count { get; set; }
     }
 }

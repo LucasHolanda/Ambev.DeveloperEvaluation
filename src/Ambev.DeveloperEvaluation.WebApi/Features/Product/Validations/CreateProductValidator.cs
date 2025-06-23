@@ -1,8 +1,9 @@
+using Ambev.DeveloperEvaluation.Application.Products.CreateProduct;
 using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Product.Validations
 {
-    public class CreateProductValidator : AbstractValidator<ProductDto>
+    public class CreateProductValidator : AbstractValidator<CreateProductCommand>
     {
         public CreateProductValidator()
         {

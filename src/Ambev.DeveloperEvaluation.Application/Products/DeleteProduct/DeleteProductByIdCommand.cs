@@ -2,7 +2,6 @@
 
 namespace Ambev.DeveloperEvaluation.Application.Products.DeleteProduct
 {
-    public record DeleteProductByIdCommand (Guid Id) : IRequest<bool>
-    {
-    }
+    public record DeleteProductByIdCommand(Guid Id) : IRequest<bool>
+    { }
 }

@@ -13,7 +13,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.DeleteProduct
         }
 
         public async Task<bool> Handle(DeleteProductByIdCommand command, CancellationToken cancellationToken)
-        {            
+        {
             var product = await _productRepository.GetByIdAsync(command.Id, cancellationToken);
             if (product == null)
                 throw new KeyNotFoundException($"Product with id {command.Id} not found.");
