@@ -34,4 +34,13 @@ public class BaseController : ControllerBase
                 TotalCount = pagedList.TotalCount,
                 Success = true
             });
+
+    protected Dictionary<string, string> GetAllQueryParameters()
+    {
+        var allQuery = HttpContext.Request.Query
+            .Where(q => !new[] { "_page", "_size", "_order" }.Contains(q.Key))
+            .ToDictionary(q => q.Key, q => q.Value.ToString());
+
+        return allQuery;
+    }
 }
