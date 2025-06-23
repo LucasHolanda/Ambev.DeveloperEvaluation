@@ -35,8 +35,8 @@ namespace Ambev.DeveloperEvaluation.WebApi.Middleware
             {
                 Success = false,
                 Message = "Validation Failed",
-                Errors = exception.Errors
-                    .Select(error => (ValidationErrorDetail)error)
+                Errors = exception.Errors.Any() ? exception.Errors.Select(error => (ValidationErrorDetail)error)
+                                                : [new ValidationErrorDetail { Error = exception.Message }],
             };
 
             var jsonOptions = new JsonSerializerOptions
