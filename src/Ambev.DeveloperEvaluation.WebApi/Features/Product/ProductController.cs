@@ -93,12 +93,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Product
             var result = await _mediator.Send(command, cancellationToken);
 
             var response = _mapper.Map<ProductDto>(result);
-            return Created(string.Empty, new ApiResponseWithData<ProductDto>
-            {
-                Success = true,
-                Message = "Product created successfully",
-                Data = response
-            });
+            return Ok(response);
         }
 
         // PUT: api/Product/{id}
@@ -142,7 +137,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Product
             if (!result)
                 return NotFound();
 
-            return Ok(result);
+            return OkMessage("Product deleted successfully");
         }
     }
 }

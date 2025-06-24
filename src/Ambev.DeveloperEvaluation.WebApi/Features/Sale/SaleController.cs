@@ -60,7 +60,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale
                 parameters._size
             );
 
-            return Ok(paginatedList);
+            return OkPaginated(paginatedList);
         }
 
         [HttpGet("GetSalePreviewByCart/{id:Guid}")]
@@ -77,12 +77,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale
             var result = await _mediator.Send(command, cancellationToken);
             var response = _mapper.Map<SaleDto>(result);
 
-            return Created(string.Empty, new ApiResponseWithData<SaleDto>
-            {
-                Success = true,
-                Message = "Sale preview created successfully",
-                Data = response
-            });
+            return Ok(response);
         }
 
         [HttpPost]
@@ -98,12 +93,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale
             var result = await _mediator.Send(command, cancellationToken);
             var response = _mapper.Map<SaleDto>(result);
 
-            return Created(string.Empty, new ApiResponseWithData<SaleDto>
-            {
-                Success = true,
-                Message = "Sale created successfully",
-                Data = response
-            });
+            return Ok(response);
         }
 
         [HttpPut("{id:Guid}")]
@@ -131,7 +121,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale
             if (!result)
                 return NotFound();
 
-            return NoContent();
+            return OkMessage("Sale deleted successfully");
         }
     }
 }

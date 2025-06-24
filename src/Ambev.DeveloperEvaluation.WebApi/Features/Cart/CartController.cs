@@ -59,7 +59,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
                 parameters._size
             );
 
-            return Ok(paginatedList);
+            return OkPaginated(paginatedList);
         }
 
         [HttpPost]
@@ -76,12 +76,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
             var result = await _mediator.Send(command, cancellationToken);
             var response = _mapper.Map<CartDto>(result);
 
-            return Created(string.Empty, new ApiResponseWithData<CartDto>
-            {
-                Success = true,
-                Message = "Cart created successfully",
-                Data = response
-            });
+            return Ok(response);
         }
 
         [HttpPut("{id:Guid}")]
@@ -109,7 +104,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
             if (!result)
                 return NotFound();
 
-            return NoContent();
+            return OkMessage("Product removed from cart successfully");
         }
 
         [HttpDelete("DeleteAllCart/{id:Guid}")]
@@ -123,7 +118,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
             if (!result)
                 return NotFound();
 
-            return NoContent();
+            return OkMessage("Cart deleted successfully");
         }
     }
 }

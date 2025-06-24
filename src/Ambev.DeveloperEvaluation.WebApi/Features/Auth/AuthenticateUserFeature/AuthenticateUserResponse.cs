@@ -24,4 +24,5 @@ public sealed class AuthenticateUserResponse
     /// Gets or sets the user's role in the system
     /// </summary>
     public string Role { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
 }
