@@ -27,6 +27,18 @@ public class Program
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
+            var corsPolicyName = "AllowAngularApp";
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: corsPolicyName,
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:4200") // Altere para o endereço do seu Angular em produção, se necessário
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
+
             builder.AddBasicHealthChecks();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -93,6 +105,7 @@ public class Program
 
             app.UseBasicHealthChecks();
 
+            app.UseCors(corsPolicyName);
             app.MapControllers();
 
             app.Run();
