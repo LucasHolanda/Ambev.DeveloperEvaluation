@@ -1,5 +1,9 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Enums;
+﻿using Ambev.DeveloperEvaluation.Common.Validation;
+using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Events;
+using Ambev.DeveloperEvaluation.Domain.Validation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 {
@@ -8,15 +12,25 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
         public string SaleNumber { get; set; } = string.Empty;
         public DateTime SaleDate { get; set; }
         public Guid CustomerId { get; set; }
-        public string CustomerName { get; set; } = string.Empty;
-        public int BranchId { get; set; }
-        public string BranchName { get; set; } = string.Empty;
+        public Branch BranchId { get; set; }
         public decimal TotalAmount { get; set; }
         public SaleStatus Status { get; set; } = SaleStatus.Active;
         public string? CancelationReason { get; set; }
         public DateTime? CancelationDate { get; set; }
 
         public virtual ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
+
+        private List<string> SaleItemValidationErrors { get; set; } = new List<string>();
+        public ValidationResultDetail Validate()
+        {
+            var validator = new SaleValidator();
+            var result = validator.Validate(this);
+            return new ValidationResultDetail
+            {
+                IsValid = result.IsValid,
+                Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
+            };
+        }
 
         public void AddItem(Guid productId, string productName, int quantity, decimal unitPrice)
         {
@@ -36,10 +50,18 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
                 Status = SaleItemStatus.Active
             };
 
-            SaleItems.Add(saleItem);
-            RecalculateTotal();
+            var saleItemValidationResult = saleItem.Validate();
+            if (!saleItemValidationResult.IsValid)
+            {
+                SaleItemValidationErrors.Add(string.Join(", ", saleItemValidationResult.Errors.Select(e => e.Error)));
+            }
+            else
+            {
+                SaleItems.Add(saleItem);
+                RecalculateTotal();
 
-            AddDomainEvent(new ItemAddedToSaleEvent(Id, saleItem));
+                AddDomainEvent(new ItemAddedToSaleEvent(Id, saleItem));
+            }
         }
 
         public void CancelSale(string reason)
@@ -88,6 +110,42 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
         {
             TotalAmount = SaleItems.Where(i => i.Status == SaleItemStatus.Active)
                                   .Sum(i => i.TotalAmount);
+        }
+
+        public static Sale CreateByCart(Cart cart)
+        {
+            var sale = new Sale
+            {
+                SaleNumber = GenerateSaleNumber(),
+                SaleDate = cart.Date,
+                CustomerId = cart.UserId,
+                BranchId = cart.BranchId,
+                TotalAmount = 0, // Will be recalculated after adding items
+                Status = SaleStatus.Active,
+            };
+
+            var saleValidationResult = sale.Validate();
+            if (!saleValidationResult.IsValid)
+            {
+                throw new DomainException("Sale validation failed: " + string.Join(", ", saleValidationResult.Errors.Select(e => e.Error)));
+            }
+
+            foreach (var cartProduct in cart.CartProducts)
+            {
+                sale.AddItem(cartProduct.ProductId, cartProduct.Product.Title, cartProduct.Quantity, cartProduct.Product.Price);
+            }
+
+            if (sale.SaleItemValidationErrors.Any())
+            {
+                throw new DomainException("Sale item validation failed: " + string.Join(", ", sale.SaleItemValidationErrors));
+            }
+
+            return sale;
+        }
+
+        private static string GenerateSaleNumber()
+        {
+            return $"SALE-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString().Substring(0, 8)}";
         }
     }
 }

@@ -12,9 +12,14 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.DeleteCart
             _cartRepository = cartRepository;
         }
 
-        public async Task<bool> Handle(DeleteCartProductCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteCartProductCommand command, CancellationToken cancellationToken)
         {
-            return await _cartRepository.DeleteCartProductAsync(request.Id, cancellationToken);
+            await _cartRepository.DeleteCartProductAsync(command.Id, cancellationToken);
+
+            var count = await _cartRepository.CountByIdAsync(command.Id, cancellationToken);
+            if (count == 0) await _cartRepository.DeleteAsync(command.Id, cancellationToken);
+
+            return true;
         }
     }
 }

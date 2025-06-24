@@ -7,6 +7,7 @@ using Ambev.DeveloperEvaluation.WebApi.Features.Users.DeleteUser;
 using Ambev.DeveloperEvaluation.WebApi.Features.Users.GetUser;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Users;
@@ -16,6 +17,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Users;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UsersController : BaseController
 {
     private readonly IMediator _mediator;

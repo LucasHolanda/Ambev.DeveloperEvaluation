@@ -78,9 +78,15 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return query;
         }
 
-        public async Task<List<T>> GetByQueryParameters(QueryParameters parameters, CancellationToken cancellationToken = default)
+        public async Task<List<T>> GetByQueryParameters(
+            QueryParameters parameters,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
+            CancellationToken cancellationToken = default)
         {
-            IQueryable<T> query = _context.Set<T>();
+            IQueryable<T> query = _dbSet.AsQueryable();
+
+            if (include != null)
+                query = include(query);
 
             query = ApplyFilters(query, parameters.Filters);
             query = ApplyOrdering(query, parameters._order);
@@ -92,11 +98,16 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<int> CountAsync(QueryParameters parameters, CancellationToken cancellationToken = default)
+        public async Task<int> CountByQueryParametersAsync(QueryParameters parameters, CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbSet;
             query = BaseRepository<T>.ApplyFilters(query, parameters.Filters);
             return await query.CountAsync(cancellationToken);
+        }
+
+        public async Task<int> CountByIdAsync(Guid Id, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.CountAsync(c => c.Id == Id, cancellationToken);
         }
 
         public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)

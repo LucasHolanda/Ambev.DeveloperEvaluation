@@ -12,7 +12,7 @@ public class GetUserProfile : Profile
     /// Initializes the mappings for GetUser operation
     /// </summary>
     public GetUserProfile()
-    {
-        CreateMap<User, GetUserResult>();
+    {     
+        CreateMap<User, GetUserResult>().ReverseMap();
     }
 }

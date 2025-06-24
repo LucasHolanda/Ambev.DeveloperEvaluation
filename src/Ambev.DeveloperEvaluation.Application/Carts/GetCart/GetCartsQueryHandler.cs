@@ -19,14 +19,14 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.GetCart
         public async Task<GetCartsQueryDto> Handle(GetCartsQueryCommand command, CancellationToken cancellationToken)
         {
             var query = _mapper.Map<QueryParameters>(command.QueryParameters);
-            var carts = await _cartRepository.GetByQueryParameters(query, cancellationToken);
+            var carts = await _cartRepository.GetByQueryParameters(query, null, cancellationToken);
 
             if (carts == null)
             {
                 throw new KeyNotFoundException("Carts with QueryParameters not found.");
             }
 
-            var totalCount = await _cartRepository.CountAsync(query, cancellationToken);
+            var totalCount = await _cartRepository.CountByQueryParametersAsync(query, cancellationToken);
 
             var cartsResult = _mapper.Map<List<CartDto>>(carts);
 

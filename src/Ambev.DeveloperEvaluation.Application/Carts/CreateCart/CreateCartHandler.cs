@@ -1,4 +1,4 @@
-using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Aggregates;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using MediatR;
@@ -25,12 +25,13 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
                 throw new InvalidOperationException("Cart already exists for this user.");
             }
 
-            if (command.CartProducts == null || !command.CartProducts.Any())
+            var cart = _mapper.Map<Cart>(command);
+            var carValidationResult = cart.Validate();
+            if (!carValidationResult.IsValid)
             {
-                throw new InvalidOperationException("Cart must contain at least one product.");
+                throw new InvalidOperationException(string.Join(", ", carValidationResult.Errors.Select(e => e.Error)));
             }
 
-            var cart = _mapper.Map<Cart>(command);
             var cartCreated = await _cartRepository.AddCartWithProductsAsync(cart, cancellationToken);
 
             var result = _mapper.Map<CartDto>(cartCreated);

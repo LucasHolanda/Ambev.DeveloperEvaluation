@@ -1,8 +1,10 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Common;
-using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Common.Validation;
+using Ambev.DeveloperEvaluation.Domain.Aggregates;
+using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Enums;
+using Ambev.DeveloperEvaluation.Domain.Validation;
 
-namespace Ambev.DeveloperEvaluation.Domain.Aggregates
+namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
     public class SaleItem : BaseEntity
     {
@@ -19,6 +21,17 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 
         public virtual Sale Sale { get; set; } = null!;
         public virtual Product Product { get; set; } = null!;
+
+        public ValidationResultDetail Validate()
+        {
+            var validator = new SaleItemValidator();
+            var result = validator.Validate(this);
+            return new ValidationResultDetail
+            {
+                IsValid = result.IsValid,
+                Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
+            };
+        }
 
         public void Cancel(string? reason = null)
         {

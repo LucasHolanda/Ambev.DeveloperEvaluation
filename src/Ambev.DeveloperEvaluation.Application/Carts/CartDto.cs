@@ -1,8 +1,12 @@
+using Ambev.DeveloperEvaluation.Domain.Enums;
+
 namespace Ambev.DeveloperEvaluation.Application.Carts
 {
     public class CartDto
     {
         public Guid Id { get; set; }
+        public Branch BranchId { get; set; }
+        public string BranchName => BranchId.ToString();
         public Guid UserId { get; set; }
         public DateTime Date { get; set; }
         public List<CartProductDto> CartProducts { get; set; } = new();

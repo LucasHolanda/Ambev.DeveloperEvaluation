@@ -1,3 +1,4 @@
+using Ambev.DeveloperEvaluation.Domain.Enums;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
@@ -5,6 +6,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
     public class CreateCartCommand : IRequest<CartDto>
     {
         public Guid UserId { get; set; }
+        public Branch BranchId { get; set; }
         public DateTime Date { get; set; }
         public List<CartProductCommand> CartProducts { get; set; } = new();
         public DateTime CreatedAt { get; set; }

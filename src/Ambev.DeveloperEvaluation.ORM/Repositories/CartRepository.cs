@@ -1,3 +1,4 @@
+using Ambev.DeveloperEvaluation.Domain.Aggregates;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -47,6 +48,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         {
             return await _dbSet
                 .Include(c => c.CartProducts)
+                .ThenInclude(cp => cp.Product)
                 .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
