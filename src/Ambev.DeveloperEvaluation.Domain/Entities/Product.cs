@@ -1,5 +1,6 @@
-using Ambev.DeveloperEvaluation.Domain.Aggregates;
+using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Domain.Validation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
@@ -14,6 +15,17 @@ public class Product : BaseEntity
 
     public virtual ICollection<CartProduct> CartProducts { get; set; } = new List<CartProduct>();
     public virtual ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
+
+    public ValidationResultDetail Validate()
+    {
+        var validator = new ProductValidator();
+        var result = validator.Validate(this);
+        return new ValidationResultDetail
+        {
+            IsValid = result.IsValid,
+            Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
+        };
+    }
 }
 
 public class ProductRating

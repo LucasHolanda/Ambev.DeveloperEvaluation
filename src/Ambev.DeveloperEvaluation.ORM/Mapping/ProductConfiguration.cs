@@ -48,8 +48,5 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(p => p.UpdatedBy)
             .HasMaxLength(100);
-
-        // TODO: Check if the IsDeleted property is needed (Create an interface for soft delete)
-        //builder.HasQueryFilter(c => !c.IsDeleted);
     }
 }

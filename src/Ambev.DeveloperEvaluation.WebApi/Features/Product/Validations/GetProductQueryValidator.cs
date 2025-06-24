@@ -14,11 +14,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Product.Validations
             RuleFor(qp => qp.QueryParameters._page)
                 .GreaterThan(0)
                 .WithMessage("Page number must be greater than 0.");
-
-            RuleFor(qp => qp.QueryParameters.Filters)
-                .NotNull()
-                .NotEmpty()
-                .WithMessage("Filters cannot be null or empty.");
         }
     }
 }

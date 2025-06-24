@@ -12,9 +12,9 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.DeleteCart
             _cartRepository = cartRepository;
         }
 
-        public async Task<bool> Handle(DeleteCartCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteCartCommand command, CancellationToken cancellationToken)
         {
-            return await _cartRepository.DeleteAllCartAsync(request.Id, cancellationToken);
+            return await _cartRepository.DeleteAllCartAsync(command.Id, cancellationToken);
         }
     }
 }

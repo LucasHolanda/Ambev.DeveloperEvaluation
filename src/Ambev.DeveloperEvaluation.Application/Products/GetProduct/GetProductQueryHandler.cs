@@ -19,14 +19,14 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
         public async Task<GetProductQueryDto> Handle(GetProductQueryCommand command, CancellationToken cancellationToken)
         {
             var query = _mapper.Map<QueryParameters>(command.QueryParameters);
-            var products = await _productRepository.GetByQueryParameters(query, cancellationToken);
+            var products = await _productRepository.GetByQueryParameters(query, null, cancellationToken);
 
             if (products == null)
             {
                 throw new KeyNotFoundException("Product with QueryParameters not found.");
             }
 
-            var totalCount = await _productRepository.CountAsync(query, cancellationToken);
+            var totalCount = await _productRepository.CountByQueryParametersAsync(query, cancellationToken);
 
             var productsResult = _mapper.Map<List<ProductDto>>(products);
 

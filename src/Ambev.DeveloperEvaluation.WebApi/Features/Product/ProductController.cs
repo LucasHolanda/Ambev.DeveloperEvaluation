@@ -8,12 +8,14 @@ using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Product.Validations;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Product
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class ProductController : BaseController
     {
         private readonly IMediator _mediator;

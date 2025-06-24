@@ -6,16 +6,17 @@ using Ambev.DeveloperEvaluation.Application.Carts.UpdateCart;
 using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Cart.Validations;
-using Ambev.DeveloperEvaluation.WebApi.Features.Users.CreateUser;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CartController : ControllerBase
+    [Authorize]
+    public class CartController : BaseController
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
@@ -62,7 +63,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(ApiResponseWithData<CreateUserResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ApiResponseWithData<CartDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateCartCommand command, CancellationToken cancellationToken)
         {
@@ -78,7 +79,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
             return Created(string.Empty, new ApiResponseWithData<CartDto>
             {
                 Success = true,
-                Message = "Product created successfully",
+                Message = "Cart created successfully",
                 Data = response
             });
         }

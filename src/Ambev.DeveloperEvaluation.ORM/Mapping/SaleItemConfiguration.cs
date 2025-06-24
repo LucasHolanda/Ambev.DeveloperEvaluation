@@ -1,4 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Aggregates;
+﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -45,9 +45,6 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
             builder.HasOne(si => si.Product)
                 .WithMany(p => p.SaleItems)
                 .HasForeignKey(si => si.ProductId);
-
-            // TODO: Check if the IsDeleted property is needed (Create an interface for soft delete)
-            //builder.HasQueryFilter(c => !c.IsDeleted);
         }
     }
 

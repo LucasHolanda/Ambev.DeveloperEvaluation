@@ -15,9 +15,9 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.GetCart
             _mapper = mapper;
         }
 
-        public async Task<CartDto?> Handle(GetCartByIdCommand request, CancellationToken cancellationToken)
+        public async Task<CartDto?> Handle(GetCartByIdCommand command, CancellationToken cancellationToken)
         {
-            var cart = await _cartRepository.GetWithProductsAsync(request.Id, cancellationToken);
+            var cart = await _cartRepository.GetWithProductsAsync(command.Id, cancellationToken);
 
             return cart != null
                 ? _mapper.Map<CartDto>(cart)
