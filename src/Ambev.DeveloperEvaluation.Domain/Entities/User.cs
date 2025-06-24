@@ -3,6 +3,7 @@ using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Validation;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities;
 

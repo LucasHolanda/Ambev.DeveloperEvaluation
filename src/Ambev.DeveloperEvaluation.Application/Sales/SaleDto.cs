@@ -11,6 +11,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales
         public DateTime SaleDate { get; set; }
         public Guid CustomerId { get; set; }
         public Branch BranchId { get; set; }
+        public string BranchName => BranchId.ToString();
         public decimal TotalAmount { get; set; }
         public SaleStatus Status { get; set; } = SaleStatus.Active;
         public string? CancelationReason { get; set; }
