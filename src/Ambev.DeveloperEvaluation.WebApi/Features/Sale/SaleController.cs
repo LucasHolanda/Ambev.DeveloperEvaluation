@@ -63,10 +63,10 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale
             return Ok(paginatedList);
         }
 
-        [HttpPost("GetSalePreviewByCart/{id:Guid}")]
+        [HttpGet("GetSalePreviewByCart/{id:Guid}")]
         [ProducesResponseType(typeof(ApiResponseWithData<SaleDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetSalePreviewByCart([FromBody] Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetSalePreviewByCart(Guid id, CancellationToken cancellationToken)
         {
             var command = new GetSalePreviewCommand(id);
             var validator = new CreateSalePreviewValidator();
