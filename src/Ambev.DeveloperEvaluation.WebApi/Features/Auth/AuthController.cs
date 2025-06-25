@@ -50,6 +50,6 @@ public class AuthController : BaseController
         var result = await _mediator.Send(command, cancellationToken);
         var response = _mapper.Map<AuthenticateUserResponse>(result);
 
-        return Ok(response);
+        return OkWithResponse(response);
     }
 }

@@ -18,7 +18,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale
 
         public async Task<SaleDto> Handle(GetSalePreviewCommand command, CancellationToken cancellationToken)
         {
-            var cart = await _cartRepository.GetWithProductsAsync(command.CartId, cancellationToken);
+            var cart = await _cartRepository.GetValidCartWithProductsAsync(command.CartId, cancellationToken);
             if (cart == null)
                 throw new KeyNotFoundException("Cart not found.");
 

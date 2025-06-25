@@ -1,7 +1,7 @@
 using Ambev.DeveloperEvaluation.Application.Carts.CreateCart;
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart.Validations
+namespace Ambev.DeveloperEvaluation.Application.Carts.Validations
 {
     public class CreateCartValidator : AbstractValidator<CreateCartCommand>
     {

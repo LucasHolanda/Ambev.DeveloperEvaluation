@@ -15,7 +15,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         public decimal UnitPrice { get; set; }
         public decimal DiscountPercentage { get; set; }
         public decimal TotalAmount { get; set; }
-        public SaleItemStatus Status { get; set; } = SaleItemStatus.Active;
+        public bool IsCancelled { get; set; }
         public string? CancelationReason { get; set; }
         public DateTime? CancelationDate { get; set; }
 
@@ -35,7 +35,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
 
         public void Cancel(string? reason = null)
         {
-            Status = SaleItemStatus.Cancelled;
+            IsCancelled = true;
             CancelationReason = reason;
             CancelationDate = DateTime.UtcNow;
         }

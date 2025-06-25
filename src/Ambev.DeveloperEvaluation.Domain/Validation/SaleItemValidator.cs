@@ -13,7 +13,6 @@ namespace Ambev.DeveloperEvaluation.Domain.Validation
             RuleFor(x => x.UnitPrice).GreaterThanOrEqualTo(0);
             RuleFor(x => x.DiscountPercentage).GreaterThanOrEqualTo(0);
             RuleFor(x => x.TotalAmount).GreaterThanOrEqualTo(0);
-            RuleFor(x => x.Status).NotNull();
         }
     }
 }

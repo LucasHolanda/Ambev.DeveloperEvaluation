@@ -1,12 +1,12 @@
 using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Application.Sales;
+using Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
-using Ambev.DeveloperEvaluation.Application.Sales.DeleteSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
 using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
+using Ambev.DeveloperEvaluation.Application.Sales.Validations;
 using Ambev.DeveloperEvaluation.WebApi.Common;
-using Ambev.DeveloperEvaluation.WebApi.Features.Sale.Validations;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -40,7 +40,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale
             return Ok(dto);
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll([FromQuery] QueryParametersCommand parameters, CancellationToken cancellationToken = default)
         {
             var command = new GetSalesQueryCommand { QueryParameters = parameters };
@@ -110,18 +110,19 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale
             return Ok(_mapper.Map<SaleDto>(result));
         }
 
-        [HttpDelete("{id:Guid}")]
-        [ProducesResponseType(typeof(ApiResponseWithData<SaleDto>), StatusCodes.Status200OK)]
+        [HttpPost("Cancel")]
+        [ProducesResponseType(typeof(ApiResponseWithData<SaleDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Cancel([FromBody] CancelSaleCommand command, CancellationToken cancellationToken)
         {
-            var command = new DeleteSaleCommand { Id = id };
-            var result = await _mediator.Send(command, cancellationToken);
-            if (!result)
-                return NotFound();
+            var validator = new CancelSaleValidator();
+            var validationResult = await validator.ValidateAsync(command, cancellationToken);
+            if (!validationResult.IsValid)
+                return BadRequest(validationResult.Errors);
 
-            return OkMessage("Sale deleted successfully");
+            var result = await _mediator.Send(command, cancellationToken);
+
+            return Ok(result);
         }
     }
 }

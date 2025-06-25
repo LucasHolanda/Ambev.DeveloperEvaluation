@@ -1,7 +1,7 @@
 using Ambev.DeveloperEvaluation.Application.Products.UpdateProduct;
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Product.Validations
+namespace Ambev.DeveloperEvaluation.Application.Products.Validations
 {
     public class UpdateProductValidator : AbstractValidator<UpdateProductCommand>
     {

@@ -1,7 +1,7 @@
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale.Validations
+namespace Ambev.DeveloperEvaluation.Application.Sales.Validations
 {
     public class CreateSaleValidator : AbstractValidator<CreateSaleCommand>
     {
@@ -34,15 +34,11 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale.Validations
                 .PrecisionScale(18, 2, true)
                 .WithMessage("Total amount must have a maximum of 18 digits and 2 decimal places.");
 
-            RuleFor(x => x.BranchId)
+            RuleFor(cart => cart.CartId)
                 .NotEmpty()
-                .WithMessage("Branch ID is required.")
+                .WithMessage("Cart ID is required.")
                 .Must(id => id != Guid.Empty)
-                .WithMessage("Branch ID must not be an empty GUID.");
-
-            RuleFor(x => x.Status)
-                .IsInEnum()
-                .WithMessage("Status must be a valid SaleStatus enum value.");
+                .WithMessage("Cart ID must not be an empty GUID."); 
 
             RuleFor(x => x.SaleNumber)
                 .NotEmpty()
@@ -80,10 +76,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale.Validations
                 .WithMessage("Total amount must be greater than or equal to 0.")
                 .PrecisionScale(18, 2, true)
                 .WithMessage("Total amount must have a maximum of 18 digits and 2 decimal places.");
-
-            RuleFor(x => x.Status)
-                .IsInEnum()
-                .WithMessage("Status must be a valid SaleItemStatus enum value.");
         }
     }
 }

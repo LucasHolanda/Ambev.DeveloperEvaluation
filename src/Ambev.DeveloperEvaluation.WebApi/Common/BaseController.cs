@@ -13,7 +13,7 @@ public class BaseController : ControllerBase
     protected string GetCurrentRole() =>
         User.FindFirst(ClaimTypes.Role)?.Value ?? throw new NullReferenceException();
 
-    protected IActionResult Ok<T>(T data) =>
+    protected IActionResult OkWithResponse<T>(T data) =>
             base.Ok(new ApiResponseWithData<T> { Data = data, Success = true });
 
     protected IActionResult OkMessage(string message) =>

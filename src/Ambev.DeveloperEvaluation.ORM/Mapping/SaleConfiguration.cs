@@ -25,19 +25,20 @@ public class SaleConfiguration : IEntityTypeConfiguration<Sale>
         builder.Property(s => s.CustomerId)
             .IsRequired();
 
-        builder.Property(s => s.BranchId)
+        builder.Property(s => s.CartId)
             .IsRequired();
 
         builder.Property(s => s.TotalAmount)
             .HasColumnType("decimal(18,2)")
             .IsRequired();
 
-        builder.Property(s => s.Status)
-            .HasConversion<string>()
-            .IsRequired();
-
         builder.Property(s => s.CancelationReason)
             .HasMaxLength(500);
+
+        builder.HasOne(s => s.Cart)
+            .WithOne(c => c.Sale)
+            .HasForeignKey<Sale>(s => s.CartId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(s => s.SaleItems)
             .WithOne(si => si.Sale)

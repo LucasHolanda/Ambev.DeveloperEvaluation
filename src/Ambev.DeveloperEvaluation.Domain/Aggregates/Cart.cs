@@ -1,7 +1,6 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities;
-using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Validation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Aggregates
@@ -9,9 +8,12 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
     public class Cart : AggregateRoot<Cart>
     {
         public Guid UserId { get; set; }
-        public Branch BranchId { get; set; }
+        // Get by bussines rule
+        public int BranchId { get; set; }
+        public bool IsSold { get; set; }
         public DateTime Date { get; set; }
         public virtual ICollection<CartProduct> CartProducts { get; set; } = new List<CartProduct>();
+        public virtual Sale Sale { get; set; } = null!;
 
         public ValidationResultDetail Validate()
         {
@@ -22,6 +24,12 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
                 IsValid = result.IsValid,
                 Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
             };
+        }
+
+        public void SetCartSold()
+        {
+            IsSold = true;
+            UpdatedAt = DateTime.UtcNow;
         }
     }
 }

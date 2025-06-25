@@ -15,9 +15,6 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
             builder.Property(c => c.UserId)
                 .IsRequired();
 
-            builder.Property(c => c.BranchId)
-                .IsRequired();
-
             builder.Property(c => c.Date)
                 .IsRequired();
 

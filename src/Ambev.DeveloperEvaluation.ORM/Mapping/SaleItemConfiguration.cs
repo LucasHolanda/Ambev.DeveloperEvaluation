@@ -31,10 +31,6 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();
 
-            builder.Property(si => si.Status)
-                .HasConversion<string>()
-                .IsRequired();
-
             builder.Property(si => si.CancelationReason)
                 .HasMaxLength(500);
 

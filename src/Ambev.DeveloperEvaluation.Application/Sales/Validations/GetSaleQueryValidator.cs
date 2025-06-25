@@ -1,7 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale.Validations
+namespace Ambev.DeveloperEvaluation.Application.Sales.Validations
 {
     public class GetSaleQueryValidator : AbstractValidator<GetSalesQueryCommand>
     {

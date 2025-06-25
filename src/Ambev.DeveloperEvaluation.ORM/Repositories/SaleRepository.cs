@@ -3,6 +3,7 @@ using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using SharpCompress.Common;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories
 {
@@ -34,11 +35,6 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return await GetByQueryParameters(queryParameters, src => src.Include(s => s.SaleItems).ThenInclude(si => si.Product), cancellationToken);
         }
 
-        public Task<IEnumerable<Sale>> GetByBranchIdAsync(int branchId, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task<IEnumerable<Sale>> GetByCustomerIdAsync(int customerId, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
@@ -54,9 +50,29 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Sale?> GetWithItemsAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<Sale?> GetWithItemsAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return await _dbSet
+                .Include(s => s.SaleItems)
+                .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+        }
+
+        public async Task<Sale?> GetWithItemsAndProductsAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet
+                .Include(s => s.SaleItems)
+                .ThenInclude(si => si.Product)
+                .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+        }
+
+        public async Task<bool> UpdateSaleAndItemsAsync(Sale Sale, CancellationToken cancellationToken = default)
+        {
+            Sale.UpdatedAt = DateTime.UtcNow;
+            _context.Set<Sale>().Update(Sale);
+            _context.Set<SaleItem>().UpdateRange(Sale.SaleItems);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return true;
         }
     }
 }

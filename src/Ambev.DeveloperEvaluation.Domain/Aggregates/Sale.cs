@@ -1,7 +1,6 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities;
-using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Domain.Validation;
 
@@ -12,13 +11,14 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
         public string SaleNumber { get; set; } = string.Empty;
         public DateTime SaleDate { get; set; }
         public Guid CustomerId { get; set; }
-        public Branch BranchId { get; set; }
+        public Guid CartId { get; set; }
         public decimal TotalAmount { get; set; }
-        public SaleStatus Status { get; set; } = SaleStatus.Active;
+        public bool IsCancelled { get; set; }
         public string? CancelationReason { get; set; }
         public DateTime? CancelationDate { get; set; }
 
         public virtual ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
+        public virtual Cart Cart { get; set; } = null!;
 
         private List<string> SaleItemValidationErrors { get; set; } = new List<string>();
         public ValidationResultDetail Validate()
@@ -46,8 +46,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
                 Quantity = quantity,
                 UnitPrice = unitPrice,
                 DiscountPercentage = discount,
-                TotalAmount = totalItemAmount,
-                Status = SaleItemStatus.Active
+                TotalAmount = totalItemAmount
             };
 
             var saleItemValidationResult = saleItem.Validate();
@@ -64,13 +63,13 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
             }
         }
 
-        public void CancelSale(string reason)
+        public void CancelSaleAndItems(string reason)
         {
-            Status = SaleStatus.Cancelled;
+            IsCancelled = true;
             CancelationReason = reason;
             CancelationDate = DateTime.UtcNow;
 
-            foreach (var item in SaleItems.Where(i => i.Status == SaleItemStatus.Active))
+            foreach (var item in SaleItems.Where(i => !i.IsCancelled))
             {
                 item.Cancel();
             }
@@ -108,7 +107,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 
         private void RecalculateTotal()
         {
-            TotalAmount = SaleItems.Where(i => i.Status == SaleItemStatus.Active)
+            TotalAmount = SaleItems.Where(i => !i.IsCancelled)
                                   .Sum(i => i.TotalAmount);
         }
 
@@ -119,9 +118,8 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
                 SaleNumber = GenerateSaleNumber(),
                 SaleDate = cart.Date,
                 CustomerId = cart.UserId,
-                BranchId = cart.BranchId,
-                TotalAmount = 0, // Will be recalculated after adding items
-                Status = SaleStatus.Active,
+                CartId = cart.Id,
+                TotalAmount = 0
             };
 
             var saleValidationResult = sale.Validate();

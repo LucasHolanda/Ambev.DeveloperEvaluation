@@ -8,10 +8,8 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
         public string SaleNumber { get; set; } = string.Empty;
         public DateTime SaleDate { get; set; }
         public Guid CustomerId { get; set; }
-        public Guid BranchId { get; set; }
+        public Guid CartId { get; set; }
         public decimal TotalAmount { get; set; }
-        public SaleStatus Status { get; set; }
-        public string? CancelationReason { get; set; }
         public List<CreateSaleItemCommand> SaleItems { get; set; } = new();
     }
 
@@ -24,7 +22,6 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
         public decimal UnitPrice { get; set; }
         public decimal DiscountPercentage { get; set; }
         public decimal TotalAmount { get; set; }
-        public SaleItemStatus Status { get; set; } = SaleItemStatus.Active;
         public string? CancelationReason { get; set; }
         public DateTime? CancelationDate { get; set; }
     }

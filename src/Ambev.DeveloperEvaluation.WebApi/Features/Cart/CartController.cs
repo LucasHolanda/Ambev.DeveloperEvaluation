@@ -3,9 +3,9 @@ using Ambev.DeveloperEvaluation.Application.Carts.CreateCart;
 using Ambev.DeveloperEvaluation.Application.Carts.DeleteCart;
 using Ambev.DeveloperEvaluation.Application.Carts.GetCart;
 using Ambev.DeveloperEvaluation.Application.Carts.UpdateCart;
+using Ambev.DeveloperEvaluation.Application.Carts.Validations;
 using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.WebApi.Common;
-using Ambev.DeveloperEvaluation.WebApi.Features.Cart.Validations;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -31,6 +31,18 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
         public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
             var command = new GetCartByIdCommand { Id = id };
+            var result = await _mediator.Send(command, cancellationToken);
+            if (result == null)
+                return NotFound();
+
+            var dto = _mapper.Map<CartDto>(result);
+            return Ok(dto);
+        }
+
+        [HttpGet("GetByUserId/{id:Guid}")]
+        public async Task<IActionResult> GetByUserId(Guid id, CancellationToken cancellationToken)
+        {
+            var command = new GetCartByUserIdCommand { UserId = id };
             var result = await _mediator.Send(command, cancellationToken);
             if (result == null)
                 return NotFound();
@@ -76,7 +88,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
             var result = await _mediator.Send(command, cancellationToken);
             var response = _mapper.Map<CartDto>(result);
 
-            return Ok(response);
+            return OkWithResponse(response);
         }
 
         [HttpPut("{id:Guid}")]
@@ -90,7 +102,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
             if (result == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<CartDto>(result));
+            return OkWithResponse(_mapper.Map<CartDto>(result));
         }
 
         [HttpDelete("DeleteCartProduct/{id:Guid}")]

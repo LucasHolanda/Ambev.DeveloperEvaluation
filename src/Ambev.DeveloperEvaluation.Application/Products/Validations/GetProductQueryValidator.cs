@@ -1,7 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Product.Validations
+namespace Ambev.DeveloperEvaluation.Application.Products.Validations
 {
     public class GetProductQueryValidator : AbstractValidator<GetProductQueryCommand>
     {
