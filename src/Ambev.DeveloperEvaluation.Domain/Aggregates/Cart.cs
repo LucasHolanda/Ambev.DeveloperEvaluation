@@ -24,5 +24,16 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
                 Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
             };
         }
+
+        public void GenerateCartProductIds()
+        {
+            foreach (var cartProduct in CartProducts)
+            {
+                if (cartProduct.Id == Guid.Empty)
+                {
+                    cartProduct.Id = Guid.NewGuid();
+                }
+            }
+        }
     }
 }

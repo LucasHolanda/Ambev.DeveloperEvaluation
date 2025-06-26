@@ -14,10 +14,13 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.DeleteCart
 
         public async Task<bool> Handle(DeleteCartProductCommand command, CancellationToken cancellationToken)
         {
+            var cart = await _cartRepository.GetByCarProductIdAsync(command.Id, cancellationToken);
+            if (cart == null) throw new InvalidOperationException("Cart not found.");
+
             await _cartRepository.DeleteCartProductAsync(command.Id, cancellationToken);
 
-            var count = await _cartRepository.CountByIdAsync(command.Id, cancellationToken);
-            if (count == 0) await _cartRepository.DeleteAsync(command.Id, cancellationToken);
+            var count = cart.CartProducts.Count -1;
+            if (count == 0) await _cartRepository.DeleteAsync(cart.Id, cancellationToken);            
 
             return true;
         }

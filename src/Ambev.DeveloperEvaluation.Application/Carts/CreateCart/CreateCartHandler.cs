@@ -26,6 +26,8 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
             }
 
             var cart = _mapper.Map<Cart>(command);
+
+            cart.GenerateCartProductIds();
             var carValidationResult = cart.Validate();
             if (!carValidationResult.IsValid)
             {

@@ -13,7 +13,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         public async Task<Cart?> AddCartWithProductsAsync(Cart cart, CancellationToken cancellationToken = default)
         {
             await AddAsync(cart, cancellationToken);
-            return await GetByIdAsync(cart.MongoId, cancellationToken);
+            return await GetByIdAsync(cart.Id, cancellationToken);
         }
 
         public async Task<Cart?> UpdateCartAsync(Cart cart, CancellationToken cancellationToken = default)
@@ -21,7 +21,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             var result = await UpdateAsync(cart, cancellationToken);
 
             if (result)
-                return await GetByIdAsync(cart.MongoId, cancellationToken);
+                return await GetByIdAsync(cart.Id, cancellationToken);
 
             return null;
         }
@@ -37,6 +37,12 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         public async Task<Cart?> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
         {
             var filter = Builders<Cart>.Filter.Eq(c => c.UserId, userId);
+            return await _collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<Cart?> GetByCarProductIdAsync(Guid cartProductId, CancellationToken cancellationToken = default)
+        {
+            var filter = Builders<Cart>.Filter.ElemMatch(c => c.CartProducts, cp => cp.Id == cartProductId);
             return await _collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
         }
 

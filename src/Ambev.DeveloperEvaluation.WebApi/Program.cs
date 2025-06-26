@@ -26,7 +26,6 @@ public class Program
         {
             Log.Information("Starting web application");
             
-            // With the following code:
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

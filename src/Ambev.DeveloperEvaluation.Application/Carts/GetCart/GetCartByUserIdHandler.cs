@@ -1,4 +1,3 @@
-using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using AutoMapper;
 using MediatR;

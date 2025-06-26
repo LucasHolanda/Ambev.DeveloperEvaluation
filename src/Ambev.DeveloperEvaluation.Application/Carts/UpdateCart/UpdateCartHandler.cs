@@ -23,6 +23,9 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
                 return null;
 
             _mapper.Map(command, cart);
+
+            cart.SetUpdated();
+            cart.GenerateCartProductIds();
             await _cartRepository.UpdateCartAsync(cart, cancellationToken);
 
             return _mapper.Map<CartDto>(cart);
