@@ -1,9 +1,15 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
+using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ambev.DeveloperEvaluation.Domain.Common;
 
 public class BaseEntity : IComparable<BaseEntity>
 {
+    [BsonId]
+    [NotMapped]
+    public Guid MongoId { get; set; }
+    [BsonIgnore]
     public Guid Id { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }

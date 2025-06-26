@@ -1,4 +1,4 @@
-using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using AutoMapper;
 using MediatR;
 
@@ -6,10 +6,10 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
 {
     public class UpdateCartHandler : IRequestHandler<UpdateCartCommand, CartDto?>
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly ICartMongoRepository _cartRepository;
         private readonly IMapper _mapper;
 
-        public UpdateCartHandler(ICartRepository cartRepository, IMapper mapper)
+        public UpdateCartHandler(ICartMongoRepository cartRepository, IMapper mapper)
         {
             _cartRepository = cartRepository;
             _mapper = mapper;

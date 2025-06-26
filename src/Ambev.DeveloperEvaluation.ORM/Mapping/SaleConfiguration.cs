@@ -38,11 +38,11 @@ public class SaleConfiguration : IEntityTypeConfiguration<Sale>
         builder.HasOne(s => s.Cart)
             .WithOne(c => c.Sale)
             .HasForeignKey<Sale>(s => s.CartId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(s => s.SaleItems)
             .WithOne(si => si.Sale)
             .HasForeignKey(si => si.SaleId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -1,13 +1,13 @@
-using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.DeleteCart
 {
     public class DeleteCartProductHandler : IRequestHandler<DeleteCartProductCommand, bool>
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly ICartMongoRepository _cartRepository;
 
-        public DeleteCartProductHandler(ICartRepository cartRepository)
+        public DeleteCartProductHandler(ICartMongoRepository cartRepository)
         {
             _cartRepository = cartRepository;
         }
