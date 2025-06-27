@@ -3,7 +3,7 @@ using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Domain.Validation;
-using MongoDB.Bson.Serialization.Attributes;
+using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 {
@@ -53,7 +53,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
             var saleItemValidationResult = saleItem.Validate();
             if (!saleItemValidationResult.IsValid)
             {
-                SaleItemValidationErrors.Add(string.Join(", ", saleItemValidationResult.Errors.Select(e => e.Error)));
+                SaleItemValidationErrors.Add(string.Join(", ", saleItemValidationResult.Errors.Select(e => e.Detail)));
             }
             else
             {
@@ -80,7 +80,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 
         public void CancelItem(Guid saleItemId, string reason)
         {
-            var item = SaleItems.FirstOrDefault(i => i.Id == saleItemId) ?? throw new InvalidOperationException("Item not found");
+            var item = SaleItems.FirstOrDefault(i => i.Id == saleItemId) ?? throw new ValidationException("Item not found");
 
             item.Cancel(reason);
             RecalculateTotal();
@@ -126,7 +126,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
             var saleValidationResult = sale.Validate();
             if (!saleValidationResult.IsValid)
             {
-                throw new DomainException("Sale validation failed: " + string.Join(", ", saleValidationResult.Errors.Select(e => e.Error)));
+                throw new DomainException("Sale validation failed: " + string.Join(", ", saleValidationResult.Errors.Select(e => e.Detail)));
             }
 
             foreach (var cartProduct in cart.CartProducts)

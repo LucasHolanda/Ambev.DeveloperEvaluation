@@ -26,7 +26,12 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
                 throw new ValidationException($"A product with title '{command.Title}' and category '{command.Category}' already exists.");
 
             var product = _mapper.Map<Product>(command);
-            await _productRepository.AddAsync(product, cancellationToken);
+
+            var validationResult = product.Validate();
+            if (!validationResult.IsValid)
+                throw new ValidationException(string.Join(", ", validationResult.Errors.Select(e => e.Detail)));
+
+            product = await _productRepository.AddAsync(product, cancellationToken);
             return _mapper.Map<ProductDto>(product);
         }
     }

@@ -1,5 +1,6 @@
 using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
@@ -20,7 +21,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
             var cart = await _cartRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (cart == null)
-                return null;
+                throw new ValidationException("Cart not found.");   
 
             _mapper.Map(command, cart);
 

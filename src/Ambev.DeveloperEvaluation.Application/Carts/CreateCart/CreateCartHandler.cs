@@ -1,6 +1,7 @@
 using Ambev.DeveloperEvaluation.Domain.Aggregates;
 using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
@@ -22,20 +23,18 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
 
             if (cartExists != null)
             {
-                throw new InvalidOperationException("Cart already exists for this user.");
+                throw new ValidationException("Cart already exists for this user.");
             }
-
-            var cart = _mapper.Map<Cart>(command);
-
+ 
+            var cart = _mapper.Map<Cart>(command);             
             cart.GenerateCartProductIds();
             var carValidationResult = cart.Validate();
             if (!carValidationResult.IsValid)
             {
-                throw new InvalidOperationException(string.Join(", ", carValidationResult.Errors.Select(e => e.Error)));
+                throw new ValidationException(string.Join(", ", carValidationResult.Errors.Select(e => e.Detail)));
             }
 
             var cartCreated = await _repository.AddCartWithProductsAsync(cart, cancellationToken);
-
             var result = _mapper.Map<CartDto>(cartCreated);
             return result;
         }

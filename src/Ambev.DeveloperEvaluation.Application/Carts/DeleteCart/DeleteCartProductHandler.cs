@@ -1,4 +1,5 @@
 using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.DeleteCart
@@ -15,7 +16,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.DeleteCart
         public async Task<bool> Handle(DeleteCartProductCommand command, CancellationToken cancellationToken)
         {
             var cart = await _cartRepository.GetByCarProductIdAsync(command.Id, cancellationToken);
-            if (cart == null) throw new InvalidOperationException("Cart not found.");
+            if (cart == null) throw new ValidationException("Cart not found.");
 
             await _cartRepository.DeleteCartProductAsync(command.Id, cancellationToken);
 

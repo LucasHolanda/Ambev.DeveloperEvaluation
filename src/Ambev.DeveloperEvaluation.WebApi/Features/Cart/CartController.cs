@@ -4,7 +4,6 @@ using Ambev.DeveloperEvaluation.Application.Carts.DeleteCart;
 using Ambev.DeveloperEvaluation.Application.Carts.GetCart;
 using Ambev.DeveloperEvaluation.Application.Carts.UpdateCart;
 using Ambev.DeveloperEvaluation.Application.Carts.Validations;
-using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using AutoMapper;
 using MediatR;

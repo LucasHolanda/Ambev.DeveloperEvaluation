@@ -1,6 +1,7 @@
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale
@@ -23,7 +24,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale
 
             if (sales == null)
             {
-                throw new KeyNotFoundException("Sales with QueryParameters not found.");
+                throw new ValidationException("Sales with QueryParameters not found.");
             }
 
             var totalCount = await _saleRepository.CountByQueryParametersAsync(query, cancellationToken);

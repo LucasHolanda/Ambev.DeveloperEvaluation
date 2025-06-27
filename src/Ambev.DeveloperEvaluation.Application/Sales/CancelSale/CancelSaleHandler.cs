@@ -1,4 +1,5 @@
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSale
@@ -17,12 +18,12 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSale
             var sale = await _saleRepository.GetWithItemsAsync(command.Id, cancellationToken);
             if (sale == null)
             {
-                throw new InvalidOperationException("Sale not found.");
+                throw new ValidationException("Sale not found.");
             }
 
             if (sale.IsCancelled)
             {
-                throw new InvalidOperationException("Sale is already cancelled.");
+                throw new ValidationException("Sale is already cancelled.");
             }
 
             sale.CancelSaleAndItems(command.CancelationReason);
