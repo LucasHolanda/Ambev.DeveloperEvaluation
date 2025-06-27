@@ -1,5 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Aggregates;
-using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -10,10 +9,6 @@ namespace Ambev.DeveloperEvaluation.ORM;
 public class PostgresContext : DbContext
 {
     public DbSet<User> Users { get; set; }
-    public DbSet<Product> Products { get; set; }
-    public DbSet<Cart> Carts { get; set; }
-    public DbSet<CartProduct> CartProducts { get; set; }
-    public DbSet<Sale> Sales { get; set; }
 
     public PostgresContext(DbContextOptions<PostgresContext> options) : base(options)
     {
@@ -37,7 +32,7 @@ public class PostgresContext : DbContext
             if (createdAtProperty != null && createdAtProperty.ClrType == typeof(DateTime))
             {
                 createdAtProperty.SetDefaultValueSql("CURRENT_TIMESTAMP");
-            }            
+            }
         }
     }
 

@@ -18,7 +18,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.Email).IsRequired().HasMaxLength(100);
         builder.Property(u => u.Phone).HasMaxLength(20);
 
-        // Configure the CreatedAt and UpdatedAt properties and CreatedBy and UpdatedBy
         builder.Property(u => u.CreatedAt)
             .IsRequired()
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
@@ -27,7 +26,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired(false)
             .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        // TODO: Consider is required or not for CreatedBy and UpdatedBy
         builder.Property(u => u.CreatedBy)
             .HasMaxLength(100)
             .IsRequired(false);
@@ -35,7 +33,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.UpdatedBy)
             .HasMaxLength(100)
             .IsRequired(false);
-        
+
         builder.Property(u => u.Status)
             .HasConversion<string>()
             .HasMaxLength(20);

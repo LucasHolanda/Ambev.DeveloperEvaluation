@@ -2,5 +2,5 @@
 
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 {
-    public record GetProductByIdCommand (Guid Id) : IRequest<ProductResult>;
+    public record GetProductByIdCommand(Guid Id) : IRequest<ProductDto>;
 }

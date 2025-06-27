@@ -1,4 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Domain.Aggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,13 +21,10 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
             builder.HasMany(c => c.CartProducts)
                 .WithOne(cp => cp.Cart)
                 .HasForeignKey(cp => cp.CartId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(c => c.CreatedAt)
                 .IsRequired();
-
-            // TODO: Check if the IsDeleted property is needed (Create an interface for soft delete)
-            //builder.HasQueryFilter(c => !c.IsDeleted);
         }
     }
 

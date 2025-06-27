@@ -25,9 +25,6 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
 
             builder.HasIndex(cp => new { cp.CartId, cp.ProductId })
                 .IsUnique();
-
-            // TODO: Check if the IsDeleted property is needed (Create an interface for soft delete)
-            //builder.HasQueryFilter(c => !c.IsDeleted);
         }
     }
 }

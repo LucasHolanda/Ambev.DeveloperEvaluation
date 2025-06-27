@@ -10,7 +10,7 @@ public static class Validator
 
         if (Activator.CreateInstance(validatorType) is not IValidator validator)
         {
-            throw new InvalidOperationException($"No validator found for: {typeof(T).Name}");
+            throw new ValidationException($"No validator found for: {typeof(T).Name}");
         }
 
         var result = await validator.ValidateAsync(new ValidationContext<T>(instance));

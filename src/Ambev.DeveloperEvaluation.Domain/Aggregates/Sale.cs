@@ -1,5 +1,8 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Enums;
-using Ambev.DeveloperEvaluation.Domain.Events;
+﻿using Ambev.DeveloperEvaluation.Common.Validation;
+using Ambev.DeveloperEvaluation.Domain.Common;
+using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Validation;
+using FluentValidation;
 
 namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 {
@@ -8,15 +11,26 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
         public string SaleNumber { get; set; } = string.Empty;
         public DateTime SaleDate { get; set; }
         public Guid CustomerId { get; set; }
-        public string CustomerName { get; set; } = string.Empty;
-        public int BranchId { get; set; }
-        public string BranchName { get; set; } = string.Empty;
+        public Guid CartId { get; set; }
         public decimal TotalAmount { get; set; }
-        public SaleStatus Status { get; set; } = SaleStatus.Active;
+        public bool IsCancelled { get; set; }
         public string? CancelationReason { get; set; }
         public DateTime? CancelationDate { get; set; }
 
         public virtual ICollection<SaleItem> SaleItems { get; set; } = new List<SaleItem>();
+        public virtual Cart Cart { get; set; } = null!;
+
+        private List<string> SaleItemValidationErrors { get; set; } = new List<string>();
+        public ValidationResultDetail Validate()
+        {
+            var validator = new SaleValidator();
+            var result = validator.Validate(this);
+            return new ValidationResultDetail
+            {
+                IsValid = result.IsValid,
+                Errors = result.Errors.Select(o => (ValidationErrorDetail)o)
+            };
+        }
 
         public void AddItem(Guid productId, string productName, int quantity, decimal unitPrice)
         {
@@ -32,46 +46,42 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
                 Quantity = quantity,
                 UnitPrice = unitPrice,
                 DiscountPercentage = discount,
-                TotalAmount = totalItemAmount,
-                Status = SaleItemStatus.Active
+                TotalAmount = totalItemAmount
             };
 
-            SaleItems.Add(saleItem);
-            RecalculateTotal();
-
-            AddDomainEvent(new ItemAddedToSaleEvent(Id, saleItem));
-        }
-
-        public void CancelSale(string reason)
-        {
-            Status = SaleStatus.Cancelled;
-            CancelationReason = reason;
-            CancelationDate = DateTime.UtcNow;
-
-            foreach (var item in SaleItems.Where(i => i.Status == SaleItemStatus.Active))
+            var saleItemValidationResult = saleItem.Validate();
+            if (!saleItemValidationResult.IsValid)
             {
-                item.Cancel();
+                SaleItemValidationErrors.Add(string.Join(", ", saleItemValidationResult.Errors.Select(e => e.Detail)));
             }
-
-            AddDomainEvent(new SaleCancelledEvent(Id, reason));
+            else
+            {
+                SaleItems.Add(saleItem);
+                RecalculateTotal();
+            }
         }
 
-        public void CancelItem(Guid saleItemId, string reason)
+        public void CancelSaleAndItems(string reason)
         {
-            var item = SaleItems.FirstOrDefault(i => i.Id == saleItemId) ?? throw new InvalidOperationException("Item not found");
+            foreach (var item in SaleItems.Where(i => !i.IsCancelled))
+            {
+                CancelItem(item, reason);
+            }
+        }
 
+        public void CancelItem(SaleItem item, string reason)
+        {
             item.Cancel(reason);
             RecalculateTotal();
-
-            AddDomainEvent(new ItemCancelledEvent(Id, saleItemId, item.ProductName, item.Quantity));
         }
+
 
         private static void ValidateQuantity(int quantity)
         {
             if (quantity > 20)
-                throw new DomainException("Cannot sell more than 20 identical items");
+                throw new ValidationException("Cannot sell more than 20 identical items");
             if (quantity <= 0)
-                throw new DomainException("Quantity must be greater than zero");
+                throw new ValidationException("Quantity must be greater than zero");
         }
 
         private static decimal CalculateDiscount(int quantity)
@@ -86,8 +96,43 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 
         private void RecalculateTotal()
         {
-            TotalAmount = SaleItems.Where(i => i.Status == SaleItemStatus.Active)
+            TotalAmount = SaleItems.Where(i => !i.IsCancelled)
                                   .Sum(i => i.TotalAmount);
+        }
+
+        public static Sale CreateByCart(Cart cart)
+        {
+            var sale = new Sale
+            {
+                SaleNumber = GenerateSaleNumber(),
+                SaleDate = cart.Date,
+                CustomerId = cart.UserId,
+                CartId = cart.Id,
+                TotalAmount = 0
+            };
+
+            var saleValidationResult = sale.Validate();
+            if (!saleValidationResult.IsValid)
+            {
+                throw new ValidationException("Sale validation failed: " + string.Join(", ", saleValidationResult.Errors.Select(e => e.Detail)));
+            }
+
+            foreach (var cartProduct in cart.CartProducts)
+            {
+                sale.AddItem(cartProduct.ProductId, cartProduct.Product.Title, cartProduct.Quantity, cartProduct.Product.Price);
+            }
+
+            if (sale.SaleItemValidationErrors.Any())
+            {
+                throw new ValidationException("Sale item validation failed: " + string.Join(", ", sale.SaleItemValidationErrors));
+            }
+
+            return sale;
+        }
+
+        private static string GenerateSaleNumber()
+        {
+            return $"SALE-{DateTime.UtcNow:yyyyMMddHHmmss}-{Guid.NewGuid().ToString().Substring(0, 8)}";
         }
     }
 }

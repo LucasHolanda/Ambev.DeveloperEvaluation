@@ -1,5 +1,3 @@
-using System;
-
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Auth.AuthenticateUserFeature;
 
 /// <summary>
@@ -15,7 +13,7 @@ public sealed class AuthenticateUserResponse
     /// <summary>
     /// Gets or sets the user's email address
     /// </summary>
-    public string Email { get; set; } = string.Empty;   
+    public string Email { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the user's full name
@@ -26,4 +24,5 @@ public sealed class AuthenticateUserResponse
     /// Gets or sets the user's role in the system
     /// </summary>
     public string Role { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
 }

@@ -25,34 +25,24 @@ public class SaleConfiguration : IEntityTypeConfiguration<Sale>
         builder.Property(s => s.CustomerId)
             .IsRequired();
 
-        builder.Property(s => s.CustomerName)
-            .IsRequired()
-            .HasMaxLength(200);
-
-        builder.Property(s => s.BranchId)
+        builder.Property(s => s.CartId)
             .IsRequired();
-
-        builder.Property(s => s.BranchName)
-            .IsRequired()
-            .HasMaxLength(200);
 
         builder.Property(s => s.TotalAmount)
             .HasColumnType("decimal(18,2)")
             .IsRequired();
 
-        builder.Property(s => s.Status)
-            .HasConversion<string>()
-            .IsRequired();
-
         builder.Property(s => s.CancelationReason)
             .HasMaxLength(500);
+
+        builder.HasOne(s => s.Cart)
+            .WithOne(c => c.Sale)
+            .HasForeignKey<Sale>(s => s.CartId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(s => s.SaleItems)
             .WithOne(si => si.Sale)
             .HasForeignKey(si => si.SaleId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        // TODO: Check if the IsDeleted property is needed (Create an interface for soft delete)
-        //builder.HasQueryFilter(c => !c.IsDeleted);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

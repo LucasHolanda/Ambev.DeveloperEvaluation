@@ -1,10 +1,11 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 {
-    public class GetProductByIdHandler : IRequestHandler<GetProductByIdCommand, ProductResult>
+    public class GetProductByIdHandler : IRequestHandler<GetProductByIdCommand, ProductDto>
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
@@ -15,17 +16,14 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
             _mapper = mapper;
         }
 
-        public async Task<ProductResult> Handle(GetProductByIdCommand command, CancellationToken cancellationToken)
+        public async Task<ProductDto> Handle(GetProductByIdCommand command, CancellationToken cancellationToken)
         {
             var products = await _productRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (products == null)
-            {
-                throw new KeyNotFoundException($"Product with id {command.Id} not found.");
-            }
+                throw new ValidationException($"Product with id {command.Id} not found.");
 
-            var result = _mapper.Map<ProductResult>(products);
-            return result;
+            return _mapper.Map<ProductDto>(products);
         }
     }
 }

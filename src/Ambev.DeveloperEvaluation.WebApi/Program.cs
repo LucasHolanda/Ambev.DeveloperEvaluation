@@ -1,13 +1,19 @@
 using Ambev.DeveloperEvaluation.Application;
+using Ambev.DeveloperEvaluation.Application.Publisher;
 using Ambev.DeveloperEvaluation.Common.HealthChecks;
 using Ambev.DeveloperEvaluation.Common.Logging;
 using Ambev.DeveloperEvaluation.Common.Security;
 using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.IoC;
 using Ambev.DeveloperEvaluation.ORM;
+using Ambev.DeveloperEvaluation.ORM.MongoDb;
 using Ambev.DeveloperEvaluation.WebApi.Middleware;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using Serilog;
 
 namespace Ambev.DeveloperEvaluation.WebApi;
@@ -20,14 +26,53 @@ public class Program
         {
             Log.Information("Starting web application");
 
+            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
             builder.AddDefaultLogging();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
 
+            var corsPolicyName = "AllowAngularApp";
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: corsPolicyName,
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:4200") // Altere para o endereço do seu Angular em produção, se necessário
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
+
             builder.AddBasicHealthChecks();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DeveloperEvaluation API", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT Token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                        },
+                        new string[] { }
+                    }
+                });
+            });
 
             builder.Services.AddDbContext<PostgresContext>(options =>
                 options.UseNpgsql(
@@ -52,6 +97,14 @@ public class Program
 
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
+            builder.Services.Configure<MongoDbSettings>(
+                builder.Configuration.GetSection("ConnectionStrings"));
+
+            builder.Services.AddSingleton<MongoDbContext>();
+
+            builder.Services.Configure<RabbitMQSettings>(
+                builder.Configuration.GetSection("RabbitMQ"));
+
             var app = builder.Build();
             app.UseMiddleware<ValidationExceptionMiddleware>();
 
@@ -68,6 +121,7 @@ public class Program
 
             app.UseBasicHealthChecks();
 
+            app.UseCors(corsPolicyName);
             app.MapControllers();
 
             app.Run();

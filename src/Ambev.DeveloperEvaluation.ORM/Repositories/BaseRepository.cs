@@ -16,27 +16,6 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public async Task<List<T>> GetByQueryParameters(QueryParameters parameters, CancellationToken cancellationToken = default)
-        {
-            IQueryable<T> query = _context.Set<T>();
-
-            query = ApplyFilters(query, parameters.Filters);
-            query = ApplyOrdering(query, parameters._order);
-
-            query = query
-                .Skip((parameters._page - 1) * parameters._size)
-                .Take(parameters._size);
-
-            return await query.ToListAsync(cancellationToken);
-        }
-
-        public async Task<int> CountAsync(QueryParameters parameters, CancellationToken cancellationToken = default)
-        {
-            IQueryable<T> query = _context.Set<T>();
-            query = BaseRepository<T>.ApplyFilters(query, parameters.Filters);
-            return await query.CountAsync(cancellationToken);
-        }
-
         private static IQueryable<T> ApplyFilters(IQueryable<T> query, Dictionary<string, string> filters)
         {
             foreach (var filter in filters)
@@ -99,6 +78,38 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
             return query;
         }
 
+        public async Task<List<T>> GetByQueryParameters(
+            QueryParameters parameters,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
+            CancellationToken cancellationToken = default)
+        {
+            IQueryable<T> query = _dbSet.AsQueryable();
+
+            if (include != null)
+                query = include(query);
+
+            query = ApplyFilters(query, parameters.Filters);
+            query = ApplyOrdering(query, parameters._order);
+
+            query = query
+                .Skip((parameters._page - 1) * parameters._size)
+                .Take(parameters._size);
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
+        public async Task<int> CountByQueryParametersAsync(QueryParameters parameters, CancellationToken cancellationToken = default)
+        {
+            IQueryable<T> query = _dbSet;
+            query = BaseRepository<T>.ApplyFilters(query, parameters.Filters);
+            return await query.CountAsync(cancellationToken);
+        }
+
+        public async Task<int> CountByIdAsync(Guid Id, CancellationToken cancellationToken = default)
+        {
+            return await _dbSet.CountAsync(c => c.Id == Id, cancellationToken);
+        }
+
         public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _dbSet.FindAsync([id], cancellationToken);
@@ -125,12 +136,8 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
 
         public virtual async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            var entity = await GetByIdAsync(id, cancellationToken);
-            if (entity == null)
-                return false;
-
-            _dbSet.Remove(entity);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _dbSet.Where(e => e.Id == id)
+                .ExecuteDeleteAsync(cancellationToken);
             return true;
         }
     }

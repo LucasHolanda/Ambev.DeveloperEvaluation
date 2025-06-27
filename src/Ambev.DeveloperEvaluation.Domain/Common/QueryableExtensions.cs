@@ -9,7 +9,14 @@ namespace Ambev.DeveloperEvaluation.Domain.Common
         {
             var param = Expression.Parameter(typeof(T), "x");
             var prop = Expression.PropertyOrField(param, propertyName);
-            var constant = Expression.Constant(Convert.ChangeType(value, prop.Type));
+            ConstantExpression constant;
+            if (prop.Type == typeof(Guid))
+            {
+                constant = Expression.Constant(Guid.Parse(value));
+            }
+            else
+                constant = Expression.Constant(Convert.ChangeType(value, prop.Type));
+
             Expression? comparison = op switch
             {
                 "eq" => Expression.Equal(prop, constant),

@@ -1,7 +1,6 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System.Text.RegularExpressions;
 
 namespace Ambev.DeveloperEvaluation.ORM.Mapping;
 
@@ -49,8 +48,5 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder.Property(p => p.UpdatedBy)
             .HasMaxLength(100);
-
-        // TODO: Check if the IsDeleted property is needed (Create an interface for soft delete)
-        //builder.HasQueryFilter(c => !c.IsDeleted);
     }
 }
