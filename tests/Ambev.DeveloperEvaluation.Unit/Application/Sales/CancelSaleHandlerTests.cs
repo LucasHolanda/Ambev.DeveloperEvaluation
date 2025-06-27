@@ -1,3 +1,4 @@
+using Ambev.DeveloperEvaluation.Application.Publisher;
 using Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
 using Ambev.DeveloperEvaluation.Domain.Aggregates;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
@@ -12,17 +13,19 @@ namespace Ambev.DeveloperEvaluation.Unit.Application.Sales;
 public class CancelSaleHandlerTests
 {
     private readonly ISaleRepository _repo;
+    private readonly IMessagePublisher _messagePublisher;
 
     public CancelSaleHandlerTests()
     {
         _repo = Substitute.For<ISaleRepository>();
+        _messagePublisher = Substitute.For<IMessagePublisher>();
     }
 
     [Fact(DisplayName = "Given valid cancel sale command When cancelling sale Then returns cancelled sale")]
     public async Task Handle_ValidCommand_CancelsSale()
     {
         // Given
-        var handler = new CancelSaleHandler(_repo);
+        var handler = new CancelSaleHandler(_repo, _messagePublisher);
         var command = SaleHandlerTestData.GenerateValidCancelCommand();
         var sale = new Sale { Id = command.Id };
 
@@ -42,7 +45,7 @@ public class CancelSaleHandlerTests
     public async Task Handle_InvalidCommand_ThrowsValidationException()
     {
         // Given
-        var handler = new CancelSaleHandler(_repo);
+        var handler = new CancelSaleHandler(_repo, _messagePublisher);
         var command = new CancelSaleCommand(); // Invalid
 
         // When

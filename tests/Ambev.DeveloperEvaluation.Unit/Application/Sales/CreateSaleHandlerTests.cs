@@ -1,5 +1,7 @@
+using Ambev.DeveloperEvaluation.Application.Publisher;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Domain.Aggregates;
+using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
@@ -19,12 +21,15 @@ public class CreateSaleHandlerTests
     private readonly ICartRepository cartRepo;
     private readonly ICartMongoRepository cartMongoRepo;
     private readonly IMapper mapper;
+    private readonly IMessagePublisher _messagePublisher;
 
     public CreateSaleHandlerTests()
     {
         repo = Substitute.For<ISaleRepository>();
         cartRepo = Substitute.For<ICartRepository>();
         cartMongoRepo = Substitute.For<ICartMongoRepository>();
+        _messagePublisher = Substitute.For<IMessagePublisher>();
+
         var config = new MapperConfiguration(cfg => cfg.AddMaps(typeof(CreateSaleHandler).Assembly));
         mapper = config.CreateMapper();
     }
@@ -33,7 +38,7 @@ public class CreateSaleHandlerTests
     public async Task Handle_ValidCommand_CreatesSale()
     {
         // Given
-        var handler = new CreateSaleHandler(repo, cartMongoRepo, cartRepo, mapper);
+        var handler = new CreateSaleHandler(repo, cartMongoRepo, cartRepo, mapper, _messagePublisher);
         var command = SaleHandlerTestData.GenerateValidCreateCommand();
         var sale = new Sale
         {
@@ -70,7 +75,7 @@ public class CreateSaleHandlerTests
     public async Task Handle_EmptyItems_ThrowsValidationException()
     {
         // Given
-        var handler = new CreateSaleHandler(repo, cartMongoRepo, cartRepo, mapper);
+        var handler = new CreateSaleHandler(repo, cartMongoRepo, cartRepo, mapper, _messagePublisher);
         var command = SaleHandlerTestData.GenerateInvalidCreateCommand_EmptyItems();
 
         cartMongoRepo.GetByIdAsync(command.CartId, default).ReturnsNull();

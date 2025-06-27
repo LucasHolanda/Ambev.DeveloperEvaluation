@@ -1,4 +1,5 @@
 using Ambev.DeveloperEvaluation.Application;
+using Ambev.DeveloperEvaluation.Application.Publisher;
 using Ambev.DeveloperEvaluation.Common.HealthChecks;
 using Ambev.DeveloperEvaluation.Common.Logging;
 using Ambev.DeveloperEvaluation.Common.Security;
@@ -100,6 +101,9 @@ public class Program
                 builder.Configuration.GetSection("ConnectionStrings"));
 
             builder.Services.AddSingleton<MongoDbContext>();
+
+            builder.Services.Configure<RabbitMQSettings>(
+                builder.Configuration.GetSection("RabbitMQ"));
 
             var app = builder.Build();
             app.UseMiddleware<ValidationExceptionMiddleware>();

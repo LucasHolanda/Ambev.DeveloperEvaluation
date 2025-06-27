@@ -8,18 +8,17 @@ using Ambev.DeveloperEvaluation.Application.Products.Validations;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Product
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class ProductController : BaseController
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper;        
 
         public ProductController(IMediator mediator, IMapper mapper)
         {
@@ -33,7 +32,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Product
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAll([FromQuery] QueryParametersCommand parameters, CancellationToken cancellationToken)
-        {
+        {          
             parameters.Filters = GetAllQueryParameters();
 
             var command = new GetProductQueryCommand { QueryParameters = parameters };

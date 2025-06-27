@@ -1,7 +1,6 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities;
-using Ambev.DeveloperEvaluation.Domain.Events;
 using Ambev.DeveloperEvaluation.Domain.Validation;
 using FluentValidation;
 
@@ -59,41 +58,30 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
             {
                 SaleItems.Add(saleItem);
                 RecalculateTotal();
-
-                AddDomainEvent(new ItemAddedToSaleEvent(Id, saleItem));
             }
         }
 
         public void CancelSaleAndItems(string reason)
         {
-            IsCancelled = true;
-            CancelationReason = reason;
-            CancelationDate = DateTime.UtcNow;
-
             foreach (var item in SaleItems.Where(i => !i.IsCancelled))
             {
-                item.Cancel();
+                CancelItem(item, reason);
             }
-
-            AddDomainEvent(new SaleCancelledEvent(Id, reason));
         }
 
-        public void CancelItem(Guid saleItemId, string reason)
+        public void CancelItem(SaleItem item, string reason)
         {
-            var item = SaleItems.FirstOrDefault(i => i.Id == saleItemId) ?? throw new ValidationException("Item not found");
-
             item.Cancel(reason);
             RecalculateTotal();
-
-            AddDomainEvent(new ItemCancelledEvent(Id, saleItemId, item.ProductName, item.Quantity));
         }
+
 
         private static void ValidateQuantity(int quantity)
         {
             if (quantity > 20)
-                throw new DomainException("Cannot sell more than 20 identical items");
+                throw new ValidationException("Cannot sell more than 20 identical items");
             if (quantity <= 0)
-                throw new DomainException("Quantity must be greater than zero");
+                throw new ValidationException("Quantity must be greater than zero");
         }
 
         private static decimal CalculateDiscount(int quantity)
@@ -126,7 +114,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
             var saleValidationResult = sale.Validate();
             if (!saleValidationResult.IsValid)
             {
-                throw new DomainException("Sale validation failed: " + string.Join(", ", saleValidationResult.Errors.Select(e => e.Detail)));
+                throw new ValidationException("Sale validation failed: " + string.Join(", ", saleValidationResult.Errors.Select(e => e.Detail)));
             }
 
             foreach (var cartProduct in cart.CartProducts)
@@ -136,7 +124,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 
             if (sale.SaleItemValidationErrors.Any())
             {
-                throw new DomainException("Sale item validation failed: " + string.Join(", ", sale.SaleItemValidationErrors));
+                throw new ValidationException("Sale item validation failed: " + string.Join(", ", sale.SaleItemValidationErrors));
             }
 
             return sale;

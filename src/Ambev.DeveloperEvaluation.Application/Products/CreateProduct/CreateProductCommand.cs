@@ -5,6 +5,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
 {
     public class CreateProductCommand : IRequest<ProductDto>
     {
+        public Guid Id { get; set; }
         public string Title { get; set; } = string.Empty;
         public decimal Price { get; set; }
         public string Description { get; set; } = string.Empty;

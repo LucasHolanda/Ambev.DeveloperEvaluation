@@ -30,9 +30,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.Validations
 
             RuleFor(x => x.TotalAmount)
                 .GreaterThan(0)
-                .WithMessage("Total amount must be greater than 0.")
-                .PrecisionScale(18, 2, true)
-                .WithMessage("Total amount must have a maximum of 18 digits and 2 decimal places.");
+                .WithMessage("Total amount must be greater than 0.");
 
             RuleFor(cart => cart.CartId)
                 .NotEmpty()
@@ -73,9 +71,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.Validations
                 .WithMessage("Unit price must have a maximum of 18 digits and 2 decimal places.");
 
             RuleFor(x => x.TotalAmount).GreaterThanOrEqualTo(0)
-                .WithMessage("Total amount must be greater than or equal to 0.")
-                .PrecisionScale(18, 2, true)
-                .WithMessage("Total amount must have a maximum of 18 digits and 2 decimal places.");
+                .WithMessage("Total amount must be greater than or equal to 0.");
         }
     }
 }

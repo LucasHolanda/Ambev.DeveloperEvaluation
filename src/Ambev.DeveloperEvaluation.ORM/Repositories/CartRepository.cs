@@ -13,13 +13,14 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         {
             var cartAdd = await _dbSet.AddAsync(cart, cancellationToken);
             foreach (var cartProduct in cart.CartProducts)
-            {
-                cartProduct.CartId = cartAdd.Entity.Id;
+            {                
+                if (cartProduct.Product != null)
+                {
+                    _context.Entry(cartProduct.Product).State = EntityState.Unchanged;
+                }
             }
 
-            //await _context.Set<CartProduct>().AddRangeAsync(cart.CartProducts, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
-
             return await GetValidCartWithProductsAsync(cartAdd.Entity.Id, cancellationToken);
         }
 
