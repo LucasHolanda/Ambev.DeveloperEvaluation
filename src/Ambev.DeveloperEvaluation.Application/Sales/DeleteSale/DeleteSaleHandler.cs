@@ -1,5 +1,6 @@
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using MediatR;
+using Serilog;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.DeleteSale
 {
@@ -14,6 +15,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.DeleteSale
 
         public async Task<bool> Handle(DeleteSaleCommand command, CancellationToken cancellationToken)
         {
+            Log.Information("Handling DeleteSaleCommand for SaleId: {SaleId}", command.Id);
             return await _saleRepository.DeleteAsync(command.Id, cancellationToken);
         }
     }

@@ -1,4 +1,4 @@
-using Ambev.DeveloperEvaluation.Domain.Aggregates;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 

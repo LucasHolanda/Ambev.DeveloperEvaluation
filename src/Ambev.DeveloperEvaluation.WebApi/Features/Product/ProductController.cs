@@ -14,7 +14,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Product
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize]
     public class ProductController : BaseController
     {
         private readonly IMediator _mediator;
@@ -32,7 +31,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Product
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetAll([FromQuery] QueryParametersCommand parameters, CancellationToken cancellationToken)
-        {          
+        {
             parameters.Filters = GetAllQueryParameters();
 
             var command = new GetProductQueryCommand { QueryParameters = parameters };

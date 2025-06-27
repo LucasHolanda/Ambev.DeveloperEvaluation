@@ -3,6 +3,7 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Serilog;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 {
@@ -19,6 +20,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 
         public async Task<GetProductQueryDto> Handle(GetProductQueryCommand command, CancellationToken cancellationToken)
         {            
+            Log.Information("Handling GetProductQueryCommand with QueryParameters: {@QueryParameters}", command.QueryParameters);
             var query = _mapper.Map<QueryParameters>(command.QueryParameters);
             var products = await _productRepository.GetByQueryParameters(query, null, cancellationToken);
 
@@ -28,6 +30,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
             }
 
             var totalCount = await _productRepository.CountByQueryParametersAsync(query, cancellationToken);
+            Log.Information("Total count of products matching query: {TotalCount}", totalCount);
 
             var productsResult = _mapper.Map<List<ProductDto>>(products);
 

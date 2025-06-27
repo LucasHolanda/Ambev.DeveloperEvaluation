@@ -106,7 +106,9 @@ public class Program
                 builder.Configuration.GetSection("RabbitMQ"));
 
             var app = builder.Build();
+
             app.UseMiddleware<ValidationExceptionMiddleware>();
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {

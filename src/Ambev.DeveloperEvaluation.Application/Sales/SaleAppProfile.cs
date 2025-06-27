@@ -1,10 +1,8 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
-using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
-using Ambev.DeveloperEvaluation.Domain.Aggregates;
-using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities;
+using Ambev.DeveloperEvaluation.Domain.Common;
 using AutoMapper;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales
@@ -23,10 +21,6 @@ namespace Ambev.DeveloperEvaluation.Application.Sales
             CreateMap<QueryParameters, QueryParametersCommand>().ReverseMap();
 
             CreateMap<CreateSaleCommand, Sale>()
-                .ForMember(uc => uc.SaleItems, opt => opt.MapFrom(src => src.SaleItems))
-                .ReverseMap();
-
-            CreateMap<UpdateSaleCommand, Sale>()
                 .ForMember(uc => uc.SaleItems, opt => opt.MapFrom(src => src.SaleItems))
                 .ReverseMap();
 

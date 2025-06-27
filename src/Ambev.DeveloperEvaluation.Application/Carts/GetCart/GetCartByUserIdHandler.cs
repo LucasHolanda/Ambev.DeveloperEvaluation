@@ -1,6 +1,7 @@
 using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using AutoMapper;
 using MediatR;
+using Serilog;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.GetCart
 {
@@ -17,6 +18,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.GetCart
 
         public async Task<CartDto?> Handle(GetCartByUserIdCommand command, CancellationToken cancellationToken)
         {
+            Log.Information("Handling GetCartByUserIdCommand for UserId: {UserId}", command.UserId);
             var cart = await _repository.GetByUserIdAsync(command.UserId, cancellationToken);
 
             return cart != null

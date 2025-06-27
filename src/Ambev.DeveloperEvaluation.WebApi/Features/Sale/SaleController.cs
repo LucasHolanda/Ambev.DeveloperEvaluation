@@ -4,7 +4,6 @@ using Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
-using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.Validations;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using AutoMapper;
@@ -96,20 +95,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale
             var response = _mapper.Map<SaleDto>(result);
 
             return Ok(response);
-        }
-
-        [HttpPut("{id:Guid}")]
-        [ProducesResponseType(typeof(ApiResponseWithData<SaleDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateSaleCommand command, CancellationToken cancellationToken)
-        {
-            command.Id = id;
-            var result = await _mediator.Send(command, cancellationToken);
-            if (result == null)
-                return NotFound();
-
-            return Ok(_mapper.Map<SaleDto>(result));
         }
 
         [HttpPost("Cancel")]

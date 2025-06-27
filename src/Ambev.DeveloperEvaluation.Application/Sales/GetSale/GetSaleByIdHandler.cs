@@ -1,6 +1,7 @@
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using MediatR;
+using Serilog;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetSaleById
 {
@@ -17,6 +18,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSaleById
 
         public async Task<SaleDto?> Handle(GetSaleByIdCommand command, CancellationToken cancellationToken)
         {
+            Log.Information("Handling GetSaleByIdCommand for SaleId: {SaleId}", command.Id);
             var Sale = await _saleRepository.GetWithItemsAndProductsAsync(command.Id, cancellationToken);
 
             return Sale != null
