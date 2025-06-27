@@ -1,74 +1,74 @@
 ﻿# 🚀 Ambev Developer Evaluation Web API
 
-Bem-vindo ao projeto **Ambev Developer Evaluation Web API**!  
-Este repositório contém uma API robusta desenvolvida em C# 12 e .NET 8, projetada para avaliações técnicas, integração de sistemas e automação de processos.  
-Aqui você encontrará uma arquitetura moderna, práticas recomendadas e integração com múltiplas tecnologias.
+Welcome to the **Ambev Developer Evaluation Web API** project!  
+This repository contains a robust API developed in C# 12 and .NET 8, designed for technical assessments, system integration, and process automation.  
+Here you will find a modern architecture, best practices, and integration with multiple technologies.
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Technologies Used
 
 - **.NET 8** &nbsp;|&nbsp; C# 12
 - **Entity Framework Core** (PostgreSQL)
-- **MongoDB** (com suporte a serialização avançada)
-- **RabbitMQ** (mensageria)
-- **MediatR** (CQRS e pipeline behaviors)
-- **AutoMapper** (mapeamento de objetos)
-- **Swagger/OpenAPI** (documentação interativa)
-- **JWT Authentication** (segurança)
-- **Docker** (containerização)
-- **Angular** (front-end sugerido para integração)
+- **MongoDB** (with advanced serialization support)
+- **RabbitMQ** (messaging)
+- **MediatR** (CQRS and pipeline behaviors)
+- **AutoMapper** (object mapping)
+- **Swagger/OpenAPI** (interactive documentation)
+- **JWT Authentication** (security)
+- **Docker** (containerization)
+- **Angular** (suggested front-end for integration)
 
 ---
 
-## 🏗️ Padrões e Boas Práticas
+## 🏗️ Patterns and Best Practices
 
-- **Injeção de Dependência** via IoC
-- **Validação Centralizada** com pipeline MediatR
-- **Middleware customizado** para tratamento de exceções
-- **Configuração por ambiente** via `appsettings.json`
-- **CORS** configurado para integração com aplicações Angular
-- **Documentação automática** com Swagger
+- **Dependency Injection** via IoC
+- **Centralized Validation** with MediatR pipeline
+- **Custom Middleware** for exception handling
+- **Environment-based configuration** via `appsettings.json`
+- **CORS** configured for integration with Angular applications
+- **Automatic documentation** with Swagger
 
 ---
 
-## 🚦 Como Executar Localmente
+## 🚦 How to Run Locally
 
-1. **Pré-requisitos**  
+1. **Prerequisites**  
    - [.NET 8 SDK](https://dotnet.microsoft.com/download)
    - [Docker](https://www.docker.com/get-started)
 
-2. **Clone o repositório**
+2. **Clone the repository**
 
-3. **Suba os containers**
+3. **Start the containers**
 
-4. **Acesse a documentação da API**  
+4. **Access the API documentation**  
    - [https://localhost:5001/swagger](https://localhost:5001/swagger)
 
-5. **Autenticação**  
-   - Utilize o endpoint `/api/auth` para obter um token JWT e acessar rotas protegidas.
+5. **Authentication**  
+   - Use the `/api/auth` endpoint to obtain a JWT token and access protected routes.
 
 ---
 
-## 🧪 Testes e Banco de Dados
+## 🧪 Tests and Database
 
-- Um arquivo de **backup do banco de dados** estará disponível na raiz do projeto (`src/backup-database.sql`) para facilitar a restauração e execução de testes locais.
-- Para restaurar o banco, utilize o comando apropriado o SGBD (PostgreSQL).
-
----
-
-## 💡 Dicas Rápidas
-
-- O CORS está liberado para `http://localhost:4200` (padrão do Angular).
-- As configurações de conexão estão em `src/Ambev.DeveloperEvaluation.WebApi/appsettings.json`.
-- O projeto segue o padrão **Clean Architecture** para máxima manutenibilidade.
+- A **database backup file** will be available at the root of the project (`src/backup-database.sql`) to facilitate restoration and local testing.
+- To restore the database, use the appropriate command for your DBMS (PostgreSQL).
 
 ---
 
-## 🤝 Contribuição
+## 💡 Quick Tips
 
-Contribuições são bem-vindas!  
+- CORS is enabled for `http://localhost:4200` (Angular default).
+- Connection settings are in `src/Ambev.DeveloperEvaluation.WebApi/appsettings.json`.
+- The project follows the **Clean Architecture** pattern for maximum maintainability.
 
 ---
 
-Feito com 💙 por Lucas Holanda
+## 🤝 Contribution
+
+Contributions are welcome!  
+
+---
+
+Made with 💙 by Lucas Holanda
