@@ -1,8 +1,6 @@
 using Ambev.DeveloperEvaluation.Application.Publisher;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Domain.Entities;
-using Ambev.DeveloperEvaluation.Domain.Common;
-using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using Ambev.DeveloperEvaluation.Unit.Application.TestData;

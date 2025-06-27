@@ -1,9 +1,9 @@
-﻿using RabbitMQ.Client;
+﻿using Ambev.DeveloperEvaluation.Application.Publisher;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.Options;
-using Ambev.DeveloperEvaluation.Application.Publisher;
-using Microsoft.Extensions.Logging;
 
 public class RabbitMQPublisher : IMessagePublisher, IAsyncDisposable, IDisposable
 {
