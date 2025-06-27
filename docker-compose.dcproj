@@ -15,8 +15,7 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\" />
+    <None Include="README.md" />
+    <None Include="src\backup-database.sql" />
   </ItemGroup>
 </Project>
