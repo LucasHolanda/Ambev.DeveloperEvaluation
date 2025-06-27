@@ -1,4 +1,3 @@
-using Ambev.DeveloperEvaluation.Application.Sales.GetSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
 using Ambev.DeveloperEvaluation.Domain.Aggregates;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
@@ -6,7 +5,6 @@ using Ambev.DeveloperEvaluation.Unit.Application.TestData;
 using AutoMapper;
 using FluentAssertions;
 using NSubstitute;
-using NSubstitute.ReturnsExtensions;
 using Xunit;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application.Sales;
@@ -29,7 +27,7 @@ public class GetSaleByIdHandlerTests
         // Given
         var handler = new GetSaleByIdHandler(_repo, _mapper);
         var command = SaleHandlerTestData.GenerateValidGetCommand();
-        var sale = new Sale { Id = command.Id};
+        var sale = new Sale { Id = command.Id };
         _repo.GetWithItemsAndProductsAsync(command.Id, default).Returns(sale);
 
         // When

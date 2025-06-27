@@ -25,8 +25,8 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
             {
                 throw new ValidationException("Cart already exists for this user.");
             }
- 
-            var cart = _mapper.Map<Cart>(command);             
+
+            var cart = _mapper.Map<Cart>(command);
             cart.GenerateCartProductIds();
             var carValidationResult = cart.Validate();
             if (!carValidationResult.IsValid)

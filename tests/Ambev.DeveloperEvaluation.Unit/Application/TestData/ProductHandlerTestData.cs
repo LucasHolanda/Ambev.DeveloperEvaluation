@@ -3,7 +3,6 @@ using Ambev.DeveloperEvaluation.Application.Products.DeleteProduct;
 using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
 using Ambev.DeveloperEvaluation.Application.Products.UpdateProduct;
 using Bogus;
-using System;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application.TestData;
 

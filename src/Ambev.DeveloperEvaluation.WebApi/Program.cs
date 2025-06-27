@@ -13,7 +13,6 @@ using Microsoft.OpenApi.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
 using Serilog;
 
 namespace Ambev.DeveloperEvaluation.WebApi;
@@ -25,7 +24,7 @@ public class Program
         try
         {
             Log.Information("Starting web application");
-            
+
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

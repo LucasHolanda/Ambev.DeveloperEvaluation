@@ -48,7 +48,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
 
             var dto = _mapper.Map<CartDto>(result);
             return Ok(dto);
-        }     
+        }
 
         [HttpPost]
         [ProducesResponseType(typeof(ApiResponseWithData<CartDto>), StatusCodes.Status201Created)]

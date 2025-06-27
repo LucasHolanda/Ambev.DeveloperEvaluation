@@ -20,8 +20,8 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.DeleteCart
 
             await _cartRepository.DeleteCartProductAsync(command.Id, cancellationToken);
 
-            var count = cart.CartProducts.Count -1;
-            if (count == 0) await _cartRepository.DeleteAsync(cart.Id, cancellationToken);            
+            var count = cart.CartProducts.Count - 1;
+            if (count == 0) await _cartRepository.DeleteAsync(cart.Id, cancellationToken);
 
             return true;
         }

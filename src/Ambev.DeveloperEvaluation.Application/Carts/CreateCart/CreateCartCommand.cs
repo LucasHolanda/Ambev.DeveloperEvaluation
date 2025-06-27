@@ -6,7 +6,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
     public class CreateCartCommand : IRequest<CartDto>
     {
         public Guid UserId { get; set; }
-        public DateTime Date { get; set; }        
+        public DateTime Date { get; set; }
         public List<CartProductCommand> CartProducts { get; set; } = new();
         public DateTime CreatedAt { get; set; }
     }

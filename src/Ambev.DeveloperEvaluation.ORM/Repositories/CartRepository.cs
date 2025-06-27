@@ -17,7 +17,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
                 cartProduct.CartId = cartAdd.Entity.Id;
             }
 
-            await _context.Set<CartProduct>().AddRangeAsync(cart.CartProducts, cancellationToken);
+            //await _context.Set<CartProduct>().AddRangeAsync(cart.CartProducts, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
             return await GetValidCartWithProductsAsync(cartAdd.Entity.Id, cancellationToken);

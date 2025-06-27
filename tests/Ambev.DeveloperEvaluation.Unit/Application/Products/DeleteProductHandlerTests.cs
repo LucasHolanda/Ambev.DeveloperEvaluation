@@ -26,7 +26,7 @@ public class DeleteProductHandlerTests
         var handler = new DeleteProductHandler(_repo);
         var command = ProductHandlerTestData.GenerateValidDeleteCommand();
         var product = new Product { Id = command.Id };
-        
+
         _repo.GetByIdAsync(command.Id, default).Returns(product);
         _repo.DeleteAsync(command.Id, default).Returns(true);
 

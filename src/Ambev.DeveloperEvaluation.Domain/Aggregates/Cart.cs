@@ -6,7 +6,7 @@ using Ambev.DeveloperEvaluation.Domain.Validation;
 namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 {
     public class Cart : AggregateRoot<Cart>
-    {        
+    {
         public Guid UserId { get; set; }
         // Get by bussines rule. Example: Get by logged user
         public int BranchId { get; set; }

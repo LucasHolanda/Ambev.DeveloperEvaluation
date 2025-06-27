@@ -21,7 +21,7 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
             var cart = await _cartRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (cart == null)
-                throw new ValidationException("Cart not found.");   
+                throw new ValidationException("Cart not found.");
 
             _mapper.Map(command, cart);
 

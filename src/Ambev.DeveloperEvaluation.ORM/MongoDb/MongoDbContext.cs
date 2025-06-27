@@ -1,6 +1,6 @@
+using Ambev.DeveloperEvaluation.Domain.Aggregates;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using Ambev.DeveloperEvaluation.Domain.Aggregates;
 
 namespace Ambev.DeveloperEvaluation.ORM.MongoDb;
 

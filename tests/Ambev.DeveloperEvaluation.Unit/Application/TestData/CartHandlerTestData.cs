@@ -28,8 +28,8 @@ public static class CartHandlerTestData
 
     private static readonly Faker<UpdateCartCommand> updateCartFaker = new Faker<UpdateCartCommand>()
         .RuleFor(c => c.Id, f => f.Random.Guid())
-        .RuleFor(c => c.CartProducts, f => new List<CartProductCommand> 
-        { 
+        .RuleFor(c => c.CartProducts, f => new List<CartProductCommand>
+        {
             new CartProductCommand
             {
                 ProductId = f.Random.Guid(),
@@ -73,7 +73,7 @@ public static class CartHandlerTestData
     public static UpdateCartCommand GenerateInvalidUpdateCommand()
     {
         var cmd = updateCartFaker.Generate();
-        cmd.CartProducts = new (); // inválido: sem produtos
+        cmd.CartProducts = new(); // inválido: sem produtos
         return cmd;
     }
 

@@ -11,7 +11,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.Validations
                 .NotEmpty()
                 .WithMessage("Sale ID is required.")
                 .Must(id => id != Guid.Empty)
-                .WithMessage("Sale ID must not be an empty GUID."); 
+                .WithMessage("Sale ID must not be an empty GUID.");
 
             RuleFor(s => s.CancelationReason)
                 .NotEmpty()

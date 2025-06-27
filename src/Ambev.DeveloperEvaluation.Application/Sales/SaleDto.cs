@@ -28,7 +28,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales
         public decimal UnitPrice { get; set; }
         public decimal DiscountPercentage { get; set; }
         public decimal TotalAmount { get; set; }
-        public bool IsCancelled { get; set; }   
+        public bool IsCancelled { get; set; }
         public string StatusName => IsCancelled ? "Cancelled" : "Active";
         public string? CancelationReason { get; set; }
         public DateTime? CancelationDate { get; set; }
