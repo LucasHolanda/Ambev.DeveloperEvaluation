@@ -1,4 +1,3 @@
-using Ambev.DeveloperEvaluation.Domain.Aggregates;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +12,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         {
             var cartAdd = await _dbSet.AddAsync(cart, cancellationToken);
             foreach (var cartProduct in cart.CartProducts)
-            {                
+            {
                 if (cartProduct.Product != null)
                 {
                     _context.Entry(cartProduct.Product).State = EntityState.Unchanged;

@@ -3,6 +3,7 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Serilog;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale
 {
@@ -19,6 +20,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale
 
         public async Task<GetSalesQueryDto> Handle(GetSalesQueryCommand command, CancellationToken cancellationToken)
         {
+            Log.Information("Handling GetSalesQueryCommand with QueryParameters: {@QueryParameters}", command.QueryParameters);
             var query = _mapper.Map<QueryParameters>(command.QueryParameters);
             var sales = await _saleRepository.GetAllByQuery(query, cancellationToken);
 
@@ -28,6 +30,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale
             }
 
             var totalCount = await _saleRepository.CountByQueryParametersAsync(query, cancellationToken);
+            Log.Information("Total sales count for QueryParameters: {TotalCount}", totalCount);
 
             var SalesResult = _mapper.Map<List<SaleDto>>(sales);
 

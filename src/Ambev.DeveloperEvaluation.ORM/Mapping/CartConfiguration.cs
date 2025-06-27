@@ -1,4 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Aggregates;
+﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

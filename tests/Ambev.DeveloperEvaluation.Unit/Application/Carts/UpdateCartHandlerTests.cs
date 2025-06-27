@@ -1,5 +1,5 @@
 using Ambev.DeveloperEvaluation.Application.Carts.UpdateCart;
-using Ambev.DeveloperEvaluation.Domain.Aggregates;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using Ambev.DeveloperEvaluation.Unit.Application.TestData;
 using AutoMapper;

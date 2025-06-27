@@ -1,8 +1,9 @@
-using Ambev.DeveloperEvaluation.Domain.Aggregates;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Serilog;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale
 {
@@ -19,10 +20,12 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.GetSale
 
         public async Task<SaleDto> Handle(GetSalePreviewCommand command, CancellationToken cancellationToken)
         {
+            Log.Information("Handling GetSalePreviewCommand for CartId: {CartId}", command.CartId);
             var cart = await _repository.GetByIdAsync(command.CartId, cancellationToken);
             if (cart == null)
                 throw new ValidationException("Cart not found.");
 
+            Log.Information("Cart found with Id: {CartId}, proceeding to create Sale preview.", cart.Id);
             var sale = Sale.CreateByCart(cart);
             return _mapper.Map<SaleDto>(sale);
         }

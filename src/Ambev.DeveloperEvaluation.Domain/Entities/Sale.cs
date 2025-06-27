@@ -1,12 +1,11 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
-using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Validation;
 using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Domain.Aggregates
+namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
-    public class Sale : AggregateRoot<Sale>
+    public class Sale : BaseEntity
     {
         public string SaleNumber { get; set; } = string.Empty;
         public DateTime SaleDate { get; set; }
@@ -63,6 +62,10 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
 
         public void CancelSaleAndItems(string reason)
         {
+            IsCancelled = true;
+            CancelationReason = reason;
+            CancelationDate = DateTime.UtcNow;
+
             foreach (var item in SaleItems.Where(i => !i.IsCancelled))
             {
                 CancelItem(item, reason);
@@ -74,7 +77,6 @@ namespace Ambev.DeveloperEvaluation.Domain.Aggregates
             item.Cancel(reason);
             RecalculateTotal();
         }
-
 
         private static void ValidateQuantity(int quantity)
         {

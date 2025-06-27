@@ -1,7 +1,6 @@
 using Ambev.DeveloperEvaluation.Application.Sales.CancelSale;
 using Ambev.DeveloperEvaluation.Application.Sales.CreateSale;
 using Ambev.DeveloperEvaluation.Application.Sales.GetSaleById;
-using Ambev.DeveloperEvaluation.Application.Sales.UpdateSale;
 using Bogus;
 
 namespace Ambev.DeveloperEvaluation.Unit.Application.TestData;
@@ -10,10 +9,6 @@ public static class SaleHandlerTestData
 {
     private static readonly Faker<GetSaleByIdCommand> getSaleByIdFaker = new Faker<GetSaleByIdCommand>()
         .RuleFor(s => s.Id, f => f.Random.Guid());
-
-    private static readonly Faker<UpdateSaleCommand> updateSaleFaker = new Faker<UpdateSaleCommand>()
-        .RuleFor(s => s.Id, f => f.Random.Guid())
-        .RuleFor(s => s.TotalAmount, f => f.Random.Decimal(10, 1000));
 
     private static readonly Faker<CancelSaleCommand> cancelSaleFaker = new Faker<CancelSaleCommand>()
         .RuleFor(s => s.Id, f => f.Random.Guid());

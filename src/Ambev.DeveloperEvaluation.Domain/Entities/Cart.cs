@@ -1,14 +1,12 @@
 ﻿using Ambev.DeveloperEvaluation.Common.Validation;
 using Ambev.DeveloperEvaluation.Domain.Common;
-using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Validation;
 
-namespace Ambev.DeveloperEvaluation.Domain.Aggregates
+namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
-    public class Cart : AggregateRoot<Cart>
+    public class Cart : BaseEntity
     {
         public Guid UserId { get; set; }
-        // Get by bussines rule. Example: Get by logged user
         public int BranchId { get; set; }
         public DateTime Date { get; set; }
         public virtual ICollection<CartProduct> CartProducts { get; set; } = new List<CartProduct>();

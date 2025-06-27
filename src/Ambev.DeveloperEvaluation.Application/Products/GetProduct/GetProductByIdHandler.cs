@@ -2,6 +2,7 @@
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Serilog;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 {
@@ -18,11 +19,13 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 
         public async Task<ProductDto> Handle(GetProductByIdCommand command, CancellationToken cancellationToken)
         {
+            Log.Information("Handling GetProductByIdCommand for ProductId: {ProductId}", command.Id);
             var products = await _productRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (products == null)
                 throw new ValidationException($"Product with id {command.Id} not found.");
 
+            Log.Information("Product found with Id: {ProductId}, proceeding to map.", command.Id);
             return _mapper.Map<ProductDto>(products);
         }
     }
