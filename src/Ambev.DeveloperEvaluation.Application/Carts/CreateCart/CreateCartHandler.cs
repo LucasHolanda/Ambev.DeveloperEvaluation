@@ -1,39 +1,40 @@
 using Ambev.DeveloperEvaluation.Domain.Aggregates;
-using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.CreateCart
 {
     public class CreateCartHandler : IRequestHandler<CreateCartCommand, CartDto>
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly ICartMongoRepository _repository;
         private readonly IMapper _mapper;
 
-        public CreateCartHandler(ICartRepository cartRepository, IMapper mapper)
+        public CreateCartHandler(ICartMongoRepository cartRepository, IMapper mapper)
         {
-            _cartRepository = cartRepository;
+            _repository = cartRepository;
             _mapper = mapper;
         }
 
         public async Task<CartDto> Handle(CreateCartCommand command, CancellationToken cancellationToken)
         {
-            var cartExists = await _cartRepository.GetByUserIdAsync(command.UserId, cancellationToken);
+            var cartExists = await _repository.GetByUserIdAsync(command.UserId, cancellationToken);
 
             if (cartExists != null)
             {
-                throw new InvalidOperationException("Cart already exists for this user.");
+                throw new ValidationException("Cart already exists for this user.");
             }
 
             var cart = _mapper.Map<Cart>(command);
+            cart.GenerateCartProductIds();
             var carValidationResult = cart.Validate();
             if (!carValidationResult.IsValid)
             {
-                throw new InvalidOperationException(string.Join(", ", carValidationResult.Errors.Select(e => e.Error)));
+                throw new ValidationException(string.Join(", ", carValidationResult.Errors.Select(e => e.Detail)));
             }
 
-            var cartCreated = await _cartRepository.AddCartWithProductsAsync(cart, cancellationToken);
-
+            var cartCreated = await _repository.AddCartWithProductsAsync(cart, cancellationToken);
             var result = _mapper.Map<CartDto>(cartCreated);
             return result;
         }

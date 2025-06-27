@@ -1,5 +1,6 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
@@ -20,7 +21,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
             var products = await _productRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (products == null)
-                throw new KeyNotFoundException($"Product with id {command.Id} not found.");
+                throw new ValidationException($"Product with id {command.Id} not found.");
 
             return _mapper.Map<ProductDto>(products);
         }

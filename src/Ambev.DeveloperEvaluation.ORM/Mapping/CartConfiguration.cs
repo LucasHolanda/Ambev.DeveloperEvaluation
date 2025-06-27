@@ -21,7 +21,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
             builder.HasMany(c => c.CartProducts)
                 .WithOne(cp => cp.Cart)
                 .HasForeignKey(cp => cp.CartId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(c => c.CreatedAt)
                 .IsRequired();

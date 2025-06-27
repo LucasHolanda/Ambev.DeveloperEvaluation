@@ -43,7 +43,9 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Sale
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll([FromQuery] QueryParametersCommand parameters, CancellationToken cancellationToken = default)
         {
+            parameters.Filters = GetAllQueryParameters();
             var command = new GetSalesQueryCommand { QueryParameters = parameters };
+
             var validator = new GetSaleQueryValidator();
             var validationResult = await validator.ValidateAsync(command, cancellationToken);
 

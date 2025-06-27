@@ -4,7 +4,6 @@ using Ambev.DeveloperEvaluation.Application.Carts.DeleteCart;
 using Ambev.DeveloperEvaluation.Application.Carts.GetCart;
 using Ambev.DeveloperEvaluation.Application.Carts.UpdateCart;
 using Ambev.DeveloperEvaluation.Application.Carts.Validations;
-using Ambev.DeveloperEvaluation.Application.Common;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using AutoMapper;
 using MediatR;
@@ -49,29 +48,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Cart
 
             var dto = _mapper.Map<CartDto>(result);
             return Ok(dto);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] QueryParametersCommand parameters, CancellationToken cancellationToken = default)
-        {
-            var command = new GetCartsQueryCommand { QueryParameters = parameters };
-            var validator = new GetCartQueryValidator();
-            var validationResult = await validator.ValidateAsync(command, cancellationToken);
-
-            if (!validationResult.IsValid)
-                return BadRequest(validationResult.Errors);
-
-            var result = await _mediator.Send(command, cancellationToken);
-            var response = _mapper.Map<List<CartDto>>(result.Carts);
-
-            var paginatedList = PaginatedList<CartDto>.Create(
-                response,
-                result.TotalCount,
-                parameters._page,
-                parameters._size
-            );
-
-            return OkPaginated(paginatedList);
         }
 
         [HttpPost]

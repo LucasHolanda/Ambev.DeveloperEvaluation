@@ -1,15 +1,16 @@
-using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
 {
     public class UpdateCartHandler : IRequestHandler<UpdateCartCommand, CartDto?>
     {
-        private readonly ICartRepository _cartRepository;
+        private readonly ICartMongoRepository _cartRepository;
         private readonly IMapper _mapper;
 
-        public UpdateCartHandler(ICartRepository cartRepository, IMapper mapper)
+        public UpdateCartHandler(ICartMongoRepository cartRepository, IMapper mapper)
         {
             _cartRepository = cartRepository;
             _mapper = mapper;
@@ -20,9 +21,12 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
             var cart = await _cartRepository.GetByIdAsync(command.Id, cancellationToken);
 
             if (cart == null)
-                return null;
+                throw new ValidationException("Cart not found.");
 
             _mapper.Map(command, cart);
+
+            cart.SetUpdated();
+            cart.GenerateCartProductIds();
             await _cartRepository.UpdateCartAsync(cart, cancellationToken);
 
             return _mapper.Map<CartDto>(cart);

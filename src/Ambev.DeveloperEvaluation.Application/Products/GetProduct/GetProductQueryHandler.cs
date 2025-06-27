@@ -1,6 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
@@ -23,7 +24,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 
             if (products == null)
             {
-                throw new KeyNotFoundException("Product with QueryParameters not found.");
+                throw new ValidationException("Product with QueryParameters not found.");
             }
 
             var totalCount = await _productRepository.CountByQueryParametersAsync(query, cancellationToken);

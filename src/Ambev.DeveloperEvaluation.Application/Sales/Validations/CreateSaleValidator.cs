@@ -38,7 +38,7 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.Validations
                 .NotEmpty()
                 .WithMessage("Cart ID is required.")
                 .Must(id => id != Guid.Empty)
-                .WithMessage("Cart ID must not be an empty GUID."); 
+                .WithMessage("Cart ID must not be an empty GUID.");
 
             RuleFor(x => x.SaleNumber)
                 .NotEmpty()

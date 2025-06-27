@@ -3,7 +3,6 @@ using Ambev.DeveloperEvaluation.Domain.Common;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
-using SharpCompress.Common;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories
 {

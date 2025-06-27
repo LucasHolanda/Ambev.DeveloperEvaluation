@@ -1,7 +1,8 @@
 using Ambev.DeveloperEvaluation.Domain.Aggregates;
-using Ambev.DeveloperEvaluation.Domain.Enums;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Domain.Repositories.Mongo;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
@@ -9,29 +10,33 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
     public class CreateSaleHandler : IRequestHandler<CreateSaleCommand, SaleDto>
     {
         private readonly ISaleRepository _saleRepository;
+        private readonly ICartMongoRepository _cartMongoRepository;
         private readonly ICartRepository _cartRepository;
         private readonly IMapper _mapper;
-
-        public CreateSaleHandler(ISaleRepository saleRepository, ICartRepository cartRepository, IMapper mapper)
+        public CreateSaleHandler(
+            ISaleRepository saleRepository,
+            ICartMongoRepository cartMongoRepository,
+            ICartRepository cartRepository,
+            IMapper mapper)
         {
             _saleRepository = saleRepository;
+            _cartMongoRepository = cartMongoRepository;
             _cartRepository = cartRepository;
             _mapper = mapper;
         }
 
         public async Task<SaleDto> Handle(CreateSaleCommand command, CancellationToken cancellationToken)
         {
-            var cart = await _cartRepository.GetByIdAsync(command.CartId, cancellationToken);
+            var cart = await _cartMongoRepository.GetByIdAsync(command.CartId, cancellationToken);
             if (cart == null)
             {
-                throw new InvalidOperationException("Cart not found.");
+                throw new ValidationException("Cart not found.");
             }
 
             var sale = _mapper.Map<Sale>(command);
-            await _saleRepository.AddAsync(sale, cancellationToken);
-
-            cart.SetCartSold();
-            await _cartRepository.UpdateCartAsync(cart, cancellationToken);
+            await _cartRepository.AddCartWithProductsAsync(cart, cancellationToken);
+            sale = await _saleRepository.AddAsync(sale, cancellationToken);
+            await _cartMongoRepository.DeleteAsync(cart.Id, cancellationToken);
 
             return _mapper.Map<SaleDto>(sale);
         }
